@@ -14,6 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: golang
+  IMAGE_LATEST_TAG: 1.20.3
 
 jobs:
   build-and-push-image:
@@ -52,6 +53,7 @@ jobs:
             type=raw,value=${{ matrix.version }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
             type=raw,value=${{ steps.semver.outputs.major }}
+            type=raw,value=latest,enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
