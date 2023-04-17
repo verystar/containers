@@ -1,5 +1,5 @@
 ARG VERSION
-FROM verystar/debian:11
+FROM bitnami/kubectl:1.26
 
 ARG VERSION
 LABEL maintainer="www.verystar.net"
