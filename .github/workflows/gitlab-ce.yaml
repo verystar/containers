@@ -20,7 +20,7 @@ jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         include:
           - version: 15.10.3
