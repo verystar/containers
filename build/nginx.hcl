@@ -24,8 +24,8 @@ target "nginx-1-23-proxy" {
     default_conf = "nginx.vh.proxy.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:proxy-1.23",
-    "registry.verystar.net/library/nginx:proxy-1.23.4",
+    "registry.verystar.net/library/nginx:1.23-proxy",
+    "registry.verystar.net/library/nginx:1.23.4-proxy",
   ]
 }
 
@@ -37,8 +37,8 @@ target "nginx-1-23-uwsgi" {
     default_conf = "nginx.vh.uwsgi.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:uwsgi-1.23",
-    "registry.verystar.net/library/nginx:uwsgi-1.23.4",
+    "registry.verystar.net/library/nginx:1.23-uwsgi",
+    "registry.verystar.net/library/nginx:1.23.4-uwsgi",
   ]
 }
 
@@ -50,8 +50,8 @@ target "nginx-1-23-nsq" {
     default_conf = "nginx.vh.nsq.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:nsq-1.23",
-    "registry.verystar.net/library/nginx:nsq-1.23.4",
+    "registry.verystar.net/library/nginx:1.23-nsq",
+    "registry.verystar.net/library/nginx:1.23.4-nsq",
   ]
 }
 
@@ -64,8 +64,8 @@ target "nginx-1-23-laravel" {
     default_conf = "nginx.vh.laravel.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:laravel-1.23",
-    "registry.verystar.net/library/nginx:laravel-1.23.4",
+    "registry.verystar.net/library/nginx:1.23-laravel",
+    "registry.verystar.net/library/nginx:1.23.4-laravel",
   ]
 }
 
@@ -78,7 +78,7 @@ target "nginx-1-23-yaf" {
     default_conf = "nginx.vh.yaf.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:yaf-1.23",
-    "registry.verystar.net/library/nginx:yaf-1.23.4",
+    "registry.verystar.net/library/nginx:1.23-yaf",
+    "registry.verystar.net/library/nginx:1.23.4-yaf",
   ]
 }
