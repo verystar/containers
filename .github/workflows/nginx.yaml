@@ -55,6 +55,7 @@ jobs:
         uses: docker/bake-action@v2
         with:
           context: nginx
+          files: build/nginx.hcl
           push: true
           targets: |
             nginx-1-23-html
