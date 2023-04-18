@@ -28,3 +28,16 @@ target "nginx-1-23-proxy" {
     "registry.verystar.net/library/nginx:proxy-1.23.4",
   ]
 }
+
+target "nginx-1-23-uwsgi" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    nginx_version = "1.23.4"
+    default_conf = "nginx.vh.uwsgi.conf"
+  }
+  tags = [
+    "registry.verystar.net/library/nginx:uwsgi-1.23",
+    "registry.verystar.net/library/nginx:uwsgi-1.23.4",
+  ]
+}
