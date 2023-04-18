@@ -54,3 +54,4 @@ jobs:
           push: true
           targets: |
             nginx-1-23-html
+            nginx-1-23-proxy
