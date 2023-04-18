@@ -10,6 +10,5 @@ RUN apt update && apt upgrade -y && \
     curl -LO https://github.com/tektoncd/cli/releases/download/v${VERSION}/tkn_${VERSION}_Linux_x86_64.tar.gz \
     && tar -xvf tkn_${VERSION}_Linux_x86_64.tar.gz -C /usr/local/bin tkn \
     && rm -rf tkn_${VERSION}_Linux_x86_64.tar.gz
-USER 1001
 ENTRYPOINT [ "/usr/local/bin/tkn" ]
 CMD [ "--help" ]
