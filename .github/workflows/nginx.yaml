@@ -57,4 +57,5 @@ jobs:
             nginx-1-23-proxy
             nginx-1-23-uwsgi
             nginx-1-23-nsq
-            nginx-1-23-php
+            nginx-1-23-yaf
+            nginx-1-23-laravel

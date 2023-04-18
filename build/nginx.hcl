@@ -55,15 +55,30 @@ target "nginx-1-23-nsq" {
   ]
 }
 
-target "nginx-1-23-php" {
+// https://learnku.com/docs/laravel/5.8/deployment/3884#server-configuration
+target "nginx-1-23-laravel" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
     nginx_version = "1.23.4"
-    default_conf = "nginx.vh.php.conf"
+    default_conf = "nginx.vh.laravel.conf"
   }
   tags = [
-    "registry.verystar.net/library/nginx:php-1.23",
-    "registry.verystar.net/library/nginx:php-1.23.4",
+    "registry.verystar.net/library/nginx:laravel-1.23",
+    "registry.verystar.net/library/nginx:laravel-1.23.4",
+  ]
+}
+
+// https://www.laruence.com/manual/tutorial.firstpage.html
+target "nginx-1-23-yaf" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    nginx_version = "1.23.4"
+    default_conf = "nginx.vh.yaf.conf"
+  }
+  tags = [
+    "registry.verystar.net/library/nginx:yaf-1.23",
+    "registry.verystar.net/library/nginx:yaf-1.23.4",
   ]
 }
