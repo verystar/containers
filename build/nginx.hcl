@@ -54,3 +54,16 @@ target "nginx-1-23-nsq" {
     "registry.verystar.net/library/nginx:nsq-1.23.4",
   ]
 }
+
+target "nginx-1-23-php" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    nginx_version = "1.23.4"
+    default_conf = "nginx.vh.php.conf"
+  }
+  tags = [
+    "registry.verystar.net/library/nginx:php-1.23",
+    "registry.verystar.net/library/nginx:php-1.23.4",
+  ]
+}
