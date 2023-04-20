@@ -1,0 +1,128 @@
+ARG php_version
+ARG mcrypt_version
+ARG redis_version
+ARG yaf_version
+ARG libssh2_version
+ARG ssh2_version
+
+FROM php:${php_version}-fpm
+
+LABEL maintainer="www.verystar.net"
+
+ARG mcrypt_version
+ARG redis_version
+ARG yaf_version
+ARG libssh2_version
+ARG ssh2_version
+
+# # ENV REQUEST_TIMEOUT 10
+ENV TZ Asia/Shanghai
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # 修复漏洞
+    curl \
+    openssl \
+    gzip \
+    systemd \
+    # 必须软件
+    autoconf \
+    libaio-dev \
+    git \
+    unzip \
+    libssl-dev \
+    libzip-dev \
+    libldap2-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    libxslt1-dev \
+    libmcrypt-dev \
+    && rm -r /var/lib/apt/lists/* \
+    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo "${TZ}" > /etc/timezone
+
+RUN docker-php-ext-install bcmath zip pdo_mysql mysqli opcache xsl gettext pcntl \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install gd \
+    # Install Ldap extension
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-install ldap
+
+# Install Redis extension
+RUN curl -fsSL https://pecl.php.net/get/redis-${redis_version}.tgz -o redis-${redis_version}.tgz \
+    && mkdir -p /tmp/redis \
+    && tar xf redis-${redis_version}.tgz -C /tmp/redis --strip-components=1 \
+    && rm -f redis-${redis_version}.tgz \
+    && docker-php-ext-configure /tmp/redis --enable-redis \
+    && docker-php-ext-install /tmp/redis \
+    && rm -rf /tmp/redis
+
+# Install yaf extension
+RUN curl -fsSL https://pecl.php.net/get/yaf-${yaf_version}.tgz -o yaf-${yaf_version}.tgz \
+    && mkdir -p /tmp/yaf \
+    && tar xf yaf-${yaf_version}.tgz -C /tmp/yaf --strip-components=1 \
+    && rm -f yaf-${yaf_version}.tgz \
+    && docker-php-ext-configure /tmp/yaf \
+    && docker-php-ext-install /tmp/yaf \
+    && rm -rf /tmp/yaf
+
+# Install mcrypt extension
+RUN curl -fsSL https://pecl.php.net/get/mcrypt-${mcrypt_version}.tgz -o mcrypt-${mcrypt_version}.tgz \
+    && mkdir -p /tmp/mcrypt \
+    && tar xf mcrypt-${mcrypt_version}.tgz -C /tmp/mcrypt --strip-components=1 \
+    && rm -f mcrypt-${mcrypt_version}.tgz \
+    && docker-php-ext-configure /tmp/mcrypt \
+    && docker-php-ext-install /tmp/mcrypt \
+    && rm -rf /tmp/mcrypt
+
+# Install libssh2 extension
+RUN curl -fsSL https://libssh2.org/download/libssh2-${libssh2_version}.tar.gz -o libssh2-${libssh2_version}.tar.gz \
+    && mkdir -p /tmp/libssh2 \
+    && tar xf libssh2-${libssh2_version}.tar.gz -C /tmp/libssh2 --strip-components=1 \
+    && rm -f libssh2-${libssh2_version}.tar.gz \
+    && cd /tmp/libssh2 \
+    && ./configure \
+    && make \
+    && make install \
+    && rm -rf /tmp/libssh2
+
+# Install ssh2 extension
+RUN curl -fsSL https://pecl.php.net/get/ssh2-${ssh2_version}.tgz -o ssh2-${ssh2_version}.tgz \
+    && mkdir -p /tmp/ssh2 \
+    && tar xf ssh2-${ssh2_version}.tgz -C /tmp/ssh2 --strip-components=1 \
+    && rm -f ssh2-${ssh2_version}.tgz \
+    && docker-php-ext-configure /tmp/ssh2 --with-ssh2 \
+    && docker-php-ext-install /tmp/ssh2 \
+    && rm -rf /tmp/ssh2
+
+RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf \
+    && echo "request_slowlog_timeout = 3" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "slowlog = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    # 与执行时间相关
+    && echo "request_terminate_timeout = MAX_EXECUTION_TIME" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "pm.max_requests = 5000" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "pm.max_children = PM_MAX_CHILDREN" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "pm.status_path = /fpm_status" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "ping.path = /fpm_ping" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "ping.response = pong" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "php_admin_value[memory_limit] = 128M" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "php_admin_value[error_log] = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "php_admin_value[date.timezone] = ${TZ}" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    # && echo "php_value[session.save_handler] = redis" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    # 设置上传文件大小
+    && echo "php_admin_value[post_max_size] = UPLOAD_MAX_FILESIZE" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "php_admin_value[upload_max_filesize] = UPLOAD_MAX_FILESIZE" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "date.timezone = ${TZ}" >> /usr/local/etc/php/php.ini \
+    && echo "expose_php = Off" >> /usr/local/etc/php/php.ini \
+    && echo "display_errors = On" >> /usr/local/etc/php/php.ini \
+    && echo "log_errors = On" >> /usr/local/etc/php/php.ini \
+    && echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT" >> /usr/local/etc/php/php.ini \
+    && echo "error_log = /proc/self/fd/2" >> /usr/local/etc/php/php.ini \
+    # && echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini \
+    # 设置PHP最大执行时间
+    && echo "max_execution_time = MAX_EXECUTION_TIME" >> /usr/local/etc/php/php.ini
+
+COPY docker-php-entrypoint.sh /docker-php-entrypoint
+ENTRYPOINT [ "/docker-php-entrypoint" ]
+CMD [ "php-fpm" ]

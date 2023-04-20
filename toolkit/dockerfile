@@ -1,0 +1,45 @@
+ARG debian_version
+ARG kubewatch_version
+ARG aliyun_cli_version
+ARG kubectl_version
+ARG kustomize_version
+ARG argocd_version
+ARG yq_version
+
+FROM registry.verystar.net/library/debian:${debian_version}
+
+ARG kubewatch_version
+ARG aliyun_cli_version
+ARG kubectl_version
+ARG kustomize_version
+ARG argocd_version
+ARG yq_version
+
+# kubewatch
+RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/kubewatch/${kubewatch_version}/kubewatch -o /usr/local/bin/kubewatch \
+    && chmod +x /usr/local/bin/kubewatch
+# aliyun-cli
+RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/aliyun-cli/${aliyun_cli_version}/aliyun -o /usr/local/bin/aliyun \
+    && chmod +x /usr/local/bin/aliyun
+# kubectl
+RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/kubectl/${kubectl_version}/kubectl -o /usr/local/bin/kubectl \
+    && chmod +x /usr/local/bin/kubectl
+# kustomize
+RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/kustomize/${kustomize_version}/kustomize -o /usr/local/bin/kustomize \
+    && chmod +x /usr/local/bin/kustomize
+# argocd
+RUN curl --silent -L https://github.com/argoproj/argo-cd/releases/download/${argocd_version}/argocd-linux-amd64 -o /usr/local/bin/argocd \
+    && chmod +x /usr/local/bin/argocd
+# yq
+RUN curl --silent -L https://github.com/mikefarah/yq/releases/download/${yq_version}/yq_linux_amd64 -o /usr/local/bin/yq \
+    && chmod +x /usr/local/bin/yq
+
+# git
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    jq \
+    openssh-client \
+    && rm -r /var/lib/apt/lists/*
+
+ENTRYPOINT [ "/usr/local/bin/kubectl" ]
+CMD [ "--help" ]
