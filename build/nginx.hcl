@@ -11,6 +11,8 @@ target "nginx-1-23-html" {
     default_conf = "nginx.vh.html.conf"
   }
   tags = [
+    "verystar/nginx:1.23",
+    "verystar/nginx:1.23.4",
     "registry.verystar.net/library/nginx:1.23",
     "registry.verystar.net/library/nginx:1.23.4",
   ]
@@ -64,6 +66,8 @@ target "nginx-1-23-laravel" {
     default_conf = "nginx.vh.laravel.conf"
   }
   tags = [
+    "verystar/nginx:1.23-laravel",
+    "verystar/nginx:1.23.4-laravel",
     "registry.verystar.net/library/nginx:1.23-laravel",
     "registry.verystar.net/library/nginx:1.23.4-laravel",
   ]
@@ -78,6 +82,8 @@ target "nginx-1-23-yaf" {
     default_conf = "nginx.vh.yaf.conf"
   }
   tags = [
+    "verystar/nginx:1.23-yaf",
+    "verystar/nginx:1.23.4-yaf",
     "registry.verystar.net/library/nginx:1.23-yaf",
     "registry.verystar.net/library/nginx:1.23.4-yaf",
   ]
