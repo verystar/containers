@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: amazoncorretto
-  IMAGE_LATEST_TAG: 20.0.0
+  IMAGE_LATEST_TAG: 20.0.1
 
 jobs:
   build-and-push-image:
@@ -23,12 +23,12 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 20.0.0
+          - version: 20.0.1
           - version: 19.0.2
-          - version: 17.0.6
+          - version: 17.0.7
           - version: 15.0.2
-          - version: 11.0.18
-          - version: 8u362
+          - version: 11.0.19
+          - version: 8u372
     steps:
       - name: Checkout
         uses: actions/checkout@v3
