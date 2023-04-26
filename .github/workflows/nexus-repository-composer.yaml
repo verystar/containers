@@ -1,0 +1,105 @@
+name: Nexus Repository Composer
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      # - "nexus-repository-composer/**"
+      - ".github/workflows/nexus-repository-composer.yaml"
+  workflow_dispatch:
+
+permissions:
+  packages: write
+
+env:
+  IMAGE_NAME: nexus-repository-composer
+  NEXUS_REPOSITORY_COMPOSER_VERSION: 0.0.29
+  IMAGE_LATEST_TAG: 3.52.0
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - version: 3.52.0
+    steps:
+      # - name: Checkout
+      #   uses: actions/checkout@v3
+
+      - name: Checkou Nexus Repository Composer
+        uses: actions/checkout@v3
+        with:
+          repository: sonatype-nexus-community/nexus-repository-composer
+          ref: composer-parent-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
+          path: nexus-repository-composer
+
+      - name: Setup Node Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Get Semver Version
+        id: get-version
+        run: |
+          npm install -g semver
+          echo "version=$(semver --coerce ${{ matrix.version }})" >> $GITHUB_OUTPUT
+
+      - name: Semver Parse
+        uses: terradatum/semver-action@main
+        id: semver
+        with:
+          version: ${{ steps.get-version.outputs.version }}
+
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/${{ env.IMAGE_NAME }}
+            verystar/${{ env.IMAGE_NAME }}
+            registry.verystar.net/library/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ matrix.version }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
+            type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
+            type=raw,value=${{ steps.semver.outputs.major }-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}}
+            type=raw,value=latest
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to ACR Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: registry.verystar.net
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: "{{defaultContext}}:${{ env.IMAGE_NAME }}"
+          push: true
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            NEXUS_VERSION=${{ matrix.version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
