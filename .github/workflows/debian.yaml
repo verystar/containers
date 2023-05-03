@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: debian
-  IMAGE_LATEST_TAG: 11.6
+  IMAGE_LATEST_TAG: 11.7
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 11.6
+          - version: 11.7
           - version: 10.13
     steps:
       - name: Checkout
