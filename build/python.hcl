@@ -4,7 +4,7 @@ target "common" {
 }
 
 // 很久没有更新了
-target "python27" {
+target "python2-7" {
   dockerfile = "Dockerfile.2"
   inherits = ["common"]
   platforms = ["linux/amd64"]
@@ -18,7 +18,7 @@ target "python27" {
 }
 
 // 很久没有更新了
-target "python36" {
+target "python3-6" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
@@ -30,7 +30,7 @@ target "python36" {
   ]
 }
 
-target "python37" {
+target "python3-7" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
@@ -42,7 +42,7 @@ target "python37" {
   ]
 }
 
-target "python38" {
+target "python3-8" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
@@ -54,7 +54,7 @@ target "python38" {
   ]
 }
 
-target "python39" {
+target "python3-9" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
@@ -90,7 +90,7 @@ target "python3-11" {
   ]
 }
 
-target "python39-ai" {
+target "python3-9-ai" {
   context = "python/bigdata"
   dockerfile = "Dockerfile.ai"
   inherits = ["common"]
