@@ -3,6 +3,7 @@ target "common" {
   context = "python"
 }
 
+// 很久没有更新了
 target "python27" {
   dockerfile = "Dockerfile.2"
   inherits = ["common"]
@@ -16,6 +17,7 @@ target "python27" {
   ]
 }
 
+// 很久没有更新了
 target "python36" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
@@ -32,11 +34,11 @@ target "python37" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.7.15"
+    python_version="3.7.16"
   }
   tags = [
     "registry.verystar.net/library/python:3.7",
-    "registry.verystar.net/library/python:3.7.15",
+    "registry.verystar.net/library/python:3.7.16",
   ]
 }
 
@@ -44,11 +46,11 @@ target "python38" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.8.15"
+    python_version="3.8.16"
   }
   tags = [
     "registry.verystar.net/library/python:3.8",
-    "registry.verystar.net/library/python:3.8.15",
+    "registry.verystar.net/library/python:3.8.16",
   ]
 }
 
@@ -56,11 +58,11 @@ target "python39" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.9.15"
+    python_version="3.9.16"
   }
   tags = [
     "registry.verystar.net/library/python:3.9",
-    "registry.verystar.net/library/python:3.9.15",
+    "registry.verystar.net/library/python:3.9.16",
   ]
 }
 

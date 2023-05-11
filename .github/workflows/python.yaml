@@ -53,11 +53,8 @@ jobs:
           files: build/python.hcl
           push: true
           targets: |
-            python27
-            python36
             python37
             python38
             python39
-            python39-ai
             python3-10
             python3-11
