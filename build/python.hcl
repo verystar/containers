@@ -68,11 +68,23 @@ target "python3-10" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.10.10"
+    python_version="3.10.11"
   }
   tags = [
     "registry.verystar.net/library/python:3.10",
-    "registry.verystar.net/library/python:3.10.10",
+    "registry.verystar.net/library/python:3.10.11",
+  ]
+}
+
+target "python3-11" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    python_version="3.11.3"
+  }
+  tags = [
+    "registry.verystar.net/library/python:3.11",
+    "registry.verystar.net/library/python:3.11.3",
   ]
 }
 
