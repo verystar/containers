@@ -32,11 +32,4 @@ else
     sed -i "s|CLIENT_MAX_BODY_SIZE|10m|g" /etc/nginx/nginx.conf
 fi
 
-# 设置index文件
-if [ -n "${INDEX_FILE}" ]; then
-    sed -i "s|__INDEX_FILE__|${INDEX_FILE}|g" /etc/nginx/conf.d/default.conf
-else
-    sed -i "s|__INDEX_FILE__|/index.html|g" /etc/nginx/conf.d/default.conf
-fi
-
 exec "$@"
