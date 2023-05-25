@@ -102,3 +102,17 @@ target "python3-9-ai" {
     "registry.verystar.net/library/python:3.9-ai-v4",
   ]
 }
+
+target "python3-8-aigc" {
+  context = "python/bigdata"
+  dockerfile = "aigc.Dockerfile"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    python_version="3.8.13"
+  }
+  tags = [
+    "registry.verystar.net/library/python:3.8-aigc",
+    "registry.verystar.net/library/python:3.8.13-aigc",
+  ]
+}
