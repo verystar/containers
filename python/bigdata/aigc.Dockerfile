@@ -17,6 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && echo "${TZ}" > /etc/timezone
 
 WORKDIR /usr/share/nginx/html
-COPY aigc.requirements-lock.txt ./requirements.txt
+COPY aigc.requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r ./requirements.txt -i https://pypi.doubanio.com/simple
 COPY pip.conf /root/.pip/pip.conf
