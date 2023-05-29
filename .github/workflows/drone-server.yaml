@@ -58,6 +58,7 @@ jobs:
           GOOS: linux
           GOARCH: amd64
         run: |
+          cd ${{ env.IMAGE_NAME }}
           mkdir -p release/linux/amd64
           go version
           go build -tags "oss nolimit" -o release/linux/amd64/drone-server ./cmd/drone-server/
