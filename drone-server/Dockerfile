@@ -1,3 +1,4 @@
+ARG VERSION
 FROM verystar/golang:1.20 as builder
 ARG VERSION
 RUN go install -tags "oss nolimit" github.com/drone/drone/cmd/drone-server@v{VERSION}
