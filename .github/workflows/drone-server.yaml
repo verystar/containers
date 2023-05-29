@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "drone-server/**"
+      # - "drone-server/**"
       - ".github/workflows/drone-server.yaml"
   workflow_dispatch:
 
@@ -28,10 +28,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Setup Node Version
-        uses: actions/setup-node@v3
+      - name: Checkou Harness Drone
+        uses: actions/checkout@v3
         with:
-          node-version: 18.x
+          repository: harness/drone
+          ref: v${{ matrix.version }}
+          path: ${{ env.IMAGE_NAME }}
+
+      - name: Setup Go Version
+        uses: actions/setup-go@v4
+        with:
+          go-version: "^1.20.4"
 
       - name: Get Semver Version
         id: get-version
@@ -45,6 +52,16 @@ jobs:
         with:
           version: ${{ steps.get-version.outputs.version }}
 
+      - name: Go Build
+        env:
+          CGO_ENABLED: 0
+          GOOS: linux
+          GOARCH: amd64
+        run: |
+          mkdir -p release/linux/amd64
+          go version
+          go build -tags "oss nolimit" -o release/linux/amd64/drone-server ./cmd/drone-server/
+
       - name: Docker Metadata
         id: meta
         uses: docker/metadata-action@v4
@@ -57,7 +74,7 @@ jobs:
             type=raw,value=${{ matrix.version }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
             type=raw,value=${{ steps.semver.outputs.major }}
-            type=raw,value=latest,enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
+            type=raw,value=latest
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -88,11 +105,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:${{ env.IMAGE_NAME }}"
+          context: "${{ env.IMAGE_NAME }}/"
           push: true
+          file: ./docker/Dockerfile.server.linux.amd64
           platforms: linux/amd64
-          # linux/arm64
-          build-args: |
-            VERSION=${{ matrix.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
