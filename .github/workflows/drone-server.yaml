@@ -108,7 +108,7 @@ jobs:
         with:
           context: "${{ env.IMAGE_NAME }}/"
           push: true
-          file: ./docker/Dockerfile.server.linux.amd64
+          file: ${{ env.IMAGE_NAME }}/docker/Dockerfile.server.linux.amd64
           platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
