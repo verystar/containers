@@ -71,7 +71,7 @@ jobs:
           mkdir -p release/linux/amd64
           go version
           go env
-          go build -a -installsuffix cgo -ldflags '-s' -tags "oss nolimit" -o release/linux/amd64/drone-server ./cmd/drone-server/
+          go build -ldflags '-s' -tags "nolimit" -o release/linux/amd64/drone-server ./cmd/drone-server/
 
       - name: Docker Metadata
         id: meta
