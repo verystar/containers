@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - "kaniko/**"
-      - ".github/workflows/kaniko.yaml"
+      - "kaniko-executor/**"
+      - ".github/workflows/kaniko-executor.yaml"
   workflow_dispatch:
 
 permissions:
