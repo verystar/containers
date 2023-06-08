@@ -30,6 +30,20 @@ target "php71-composer19" {
   ]
 }
 
+target "php71-composer22" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  context = "php/7.1-composer"
+  args = {
+    php_version = "7.1.33-fpm"
+    composer_version = "2.2.0"
+  }
+  tags = [
+    "registry.verystar.net/library/php:7.1.33-composer-2.2.0",
+    "registry.verystar.net/library/composer:7.1.33-composer-2.2.0",
+  ]
+}
+
 target "php73-composer19" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
