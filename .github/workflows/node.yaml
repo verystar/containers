@@ -27,7 +27,6 @@ jobs:
           - version: 18.15.0
           - version: 16.20.0
           - version: 14.21.3
-          - version: 14.18.3
     steps:
       - name: Checkout
         uses: actions/checkout@v3
