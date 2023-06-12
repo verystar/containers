@@ -58,6 +58,19 @@ target "php73-composer19" {
   ]
 }
 
+target "php73-composer22" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  context = "php/7.3-composer"
+  args = {
+    php_version = "7.3.33-fpm"
+    composer_version = "2.2.0"
+  }
+  tags = [
+    "registry.verystar.net/library/php:7.3.33-composer-2.2.0",
+    "registry.verystar.net/library/composer:7.3.33-composer-2.2.0",
+  ]
+}
 
 target "starbucks-composer-2-4-php-7-4" {
   inherits = ["common"]
