@@ -23,11 +23,21 @@ jobs:
       fail-fast: true
       matrix:
         include:
+          # https://pnpm.io/installation#compatibility
+          - version: 20.3.0
+            pnpm: 8
           - version: 19.9.0
+            pnpm: 8
           - version: 18.15.0
+            pnpm: 8
           - version: 16.20.0
+            pnpm: 8
           - version: 14.21.3
+            pnpm: 7
+          - version: 14.18.3
+            pnpm: 7
           - version: 12.22.12
+            pnpm: 6
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -98,5 +108,6 @@ jobs:
           # linux/arm64
           build-args: |
             VERSION=${{ matrix.version }}
+            PNPM=${{ matrix.pnpm }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
