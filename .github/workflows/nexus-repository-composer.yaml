@@ -15,7 +15,7 @@ permissions:
 env:
   IMAGE_NAME: nexus-repository-composer
   NEXUS_REPOSITORY_COMPOSER_VERSION: 0.0.29
-  IMAGE_LATEST_TAG: 3.52.0
+  IMAGE_LATEST_TAG: 3.54.1
 
 jobs:
   build-and-push-image:
@@ -24,6 +24,8 @@ jobs:
       fail-fast: true
       matrix:
         include:
+          - version: 3.54.1
+          - version: 3.53.1
           - version: 3.52.0
     steps:
       - name: Checkout
@@ -64,8 +66,8 @@ jobs:
           tags: |
             type=raw,value=${{ matrix.version }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
-            type=raw,value=${{ steps.semver.outputs.major }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
-            type=raw,value=latest
+            type=raw,value=${{ steps.semver.outputs.major }}-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }},enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
+            type=raw,value=latest,enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
