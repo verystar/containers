@@ -15,7 +15,7 @@ permissions:
 env:
   IMAGE_NAME: nexus-repository-composer
   NEXUS_REPOSITORY_COMPOSER_VERSION: 0.0.29
-  IMAGE_LATEST_TAG: 3.54.1
+  IMAGE_LATEST_TAG: 3.55.0
 
 jobs:
   build-and-push-image:
@@ -24,9 +24,8 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 3.54.1
-          - version: 3.53.1
-          - version: 3.52.0
+          - version: 3.55.0
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
