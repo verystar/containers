@@ -26,18 +26,25 @@ jobs:
           # https://pnpm.io/installation#compatibility
           - version: 20.3.0
             pnpm: 8
+            cnpm: 9
           - version: 19.9.0
             pnpm: 8
+            cnpm: 9
           - version: 18.15.0
             pnpm: 8
+            cnpm: 9
           - version: 16.20.0
             pnpm: 8
+            cnpm: 9
           - version: 14.21.3
             pnpm: 7
+            cnpm: 7
           - version: 14.18.3
             pnpm: 7
+            cnpm: 7
           - version: 12.22.12
             pnpm: 6
+            cnpm: 7
     steps:
       - name: Checkout
         uses: actions/checkout@v3

@@ -1,8 +1,10 @@
 ARG VERSION
 ARG PNPM
+ARG CNPM
 
 FROM node:${VERSION}
 ARG PNPM
+ARG CNPM
 
 LABEL maintainer="www.verystar.net"
 
@@ -23,7 +25,7 @@ ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com \
     SELENIUM_CDNURL=https://npmmirror.com/mirrors/selenium \
     NODE_INSPECTOR_CDNURL=https://npmmirror.com/mirrors/node-inspector
 
-RUN npm install -g pnpm@${PNPM} cnpm webpack-dev-server \
+RUN npm install -g pnpm@${PNPM} cnpm@${CNPM} webpack-dev-server \
     && mkdir ~/.ssh \
     && chmod 700 ~/.ssh \
     && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
