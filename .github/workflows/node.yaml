@@ -116,5 +116,6 @@ jobs:
           build-args: |
             VERSION=${{ matrix.version }}
             PNPM=${{ matrix.pnpm }}
+            CNPM=${{ matrix.cnpm }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
