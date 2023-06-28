@@ -147,15 +147,15 @@ target "starbucks-php7-4" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    php_version = "7.4.30"
+    php_version = "7.4.33"
     redis_version = "5.3.7"
     yaf_version = "3.3.5"
-    mcrypt_version = "1.0.5"
-    libssh2_version = "1.10.0"
-    ssh2_version = "1.3.1"
+    mcrypt_version = "1.0.6"
+    libssh2_version = "1.11.0"
+    ssh2_version = "1.4"
   }
   tags = [
     "verystar/php:7.4-fpm",
-    "verystar/php:7.4.30-fpm",
+    "verystar/php:7.4.33-fpm",
   ]
 }

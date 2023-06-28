@@ -23,6 +23,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     openssl \
     gzip \
+    libtasn1-6 \
+    libgssapi-krb5-2 \
+    libkrb5-3 \
+    libkrb5support0 \
+    libgnutls30 \
+    libk5crypto3 \
     # 必须软件
     autoconf \
     libaio-dev \
