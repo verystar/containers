@@ -24,8 +24,8 @@ jobs:
       matrix:
         include:
           - version: 1.21.0
-          # - version: 1.20.5
-          # - version: 1.19.10
+          - version: 1.20.7
+          - version: 1.19.12
     steps:
       - name: Checkout
         uses: actions/checkout@v3
