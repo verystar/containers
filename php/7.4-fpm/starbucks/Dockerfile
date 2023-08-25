@@ -29,6 +29,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libkrb5support0 \
     libgnutls30 \
     libk5crypto3 \
+    libsystemd0 \
+    ncurses-base \
+    ncurses-bin \
     # 必须软件
     autoconf \
     libaio-dev \

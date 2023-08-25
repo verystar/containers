@@ -155,7 +155,7 @@ target "starbucks-php7-4" {
     ssh2_version = "1.4"
   }
   tags = [
-    "verystar/php:7.4-fpm",
-    "verystar/php:7.4.33-fpm",
+    "verystar/php:7.4-fpm-r1",
+    "verystar/php:7.4.33-fpm-r1",
   ]
 }
