@@ -30,8 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libgnutls30 \
     libk5crypto3 \
     libsystemd0 \
+    libudev1 \
     ncurses-base \
     ncurses-bin \
+    libtinfo6 \
     # 必须软件
     autoconf \
     libaio-dev \

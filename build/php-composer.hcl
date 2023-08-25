@@ -77,11 +77,11 @@ target "starbucks-composer-2-5-php-7-4" {
   platforms = ["linux/amd64"]
   context = "php/7.4-composer/starbucks"
   args = {
-    php_version = "7.4.33-fpm-r1"
+    php_version = "7.4.33-fpm-r2"
     composer_version = "2.5.8"
   }
   tags = [
-    "verystar/composer:2.5-php-7.4-r1",
-    "verystar/composer:2.5.8-php-7.4.33-r1",
+    "verystar/composer:2.5-php-7.4-r2",
+    "verystar/composer:2.5.8-php-7.4.33-r2",
   ]
 }
