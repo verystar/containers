@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: golang
-  IMAGE_LATEST_TAG: 1.21.0
+  IMAGE_LATEST_TAG: 1.21.1
 
 jobs:
   build-and-push-image:
@@ -23,9 +23,9 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 1.21.0
-          - version: 1.20.7
-          - version: 1.19.12
+          - version: 1.21.1
+          - version: 1.20.8
+          # - version: 1.19.12
     steps:
       - name: Checkout
         uses: actions/checkout@v3
