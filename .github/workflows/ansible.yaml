@@ -38,13 +38,13 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          echo "version=$(semver --coerce ${{ matrix.version }})" >> $GITHUB_OUTPUT
+          echo "version=$(semver --coerce ${{ matrix.python_version }})" >> $GITHUB_OUTPUT
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
         id: semver
         with:
-          version: ${{ steps.get-version.outputs.version }}
+          version: ${{ steps.get-version.outputs.python_version }}
 
       - name: Docker Metadata
         id: meta
@@ -93,6 +93,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
-            VERSION=${{ matrix.version }}
+            python_version: ${{ matrix.python_version }}
+            ansible_version: ${{ matrix.ansible_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
