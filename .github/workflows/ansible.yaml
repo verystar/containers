@@ -24,7 +24,7 @@ jobs:
       matrix:
         include:
           - python_version: 3.7.17
-          - ansible_version: 4.8.0
+            ansible_version: 4.8.0
     steps:
       - name: Checkout
         uses: actions/checkout@v3
