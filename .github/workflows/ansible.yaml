@@ -38,13 +38,13 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          echo "version=$(semver --coerce ${{ matrix.python_version }})" >> $GITHUB_OUTPUT
+          echo "version=$(semver --coerce ${{ matrix.ansible_version }})" >> $GITHUB_OUTPUT
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
         id: semver
         with:
-          version: ${{ steps.get-version.outputs.python_version }}
+          version: ${{ steps.get-version.outputs.version }}
 
       - name: Docker Metadata
         id: meta
@@ -55,10 +55,10 @@ jobs:
             verystar/${{ env.IMAGE_NAME }}
             registry.verystar.net/library/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=${{ matrix.version }}
+            type=raw,value=${{ matrix.ansible_version }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
-            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
-            type=raw,value=latest,enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
+            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ matrix.ansible_version == env.IMAGE_LATEST_TAG }}
+            type=raw,value=latest,enable=${{ matrix.ansible_version == env.IMAGE_LATEST_TAG }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
