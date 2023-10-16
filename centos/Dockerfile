@@ -14,5 +14,17 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
+RUN yum install -y \
+        ca-certificates \
+        procps \
+        iputils-ping \
+        curl \
+        wget \
+        iproute \
+        tzdata \
+    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && echo "${TZ}" > /etc/timezone \
+    && yum clean all \
+    && rm -rf /var/cache/yum/*
 VOLUME [ "/sys/fs/cgroup" ]
 CMD ["/usr/sbin/init"]
