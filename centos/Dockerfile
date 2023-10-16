@@ -14,7 +14,12 @@ RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == \
     rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
-RUN yum install -y \
+RUN yum makecache fast \
+    && yum install -y deltarpm epel-release initscripts \
+    && yum update -y \
+    && yum install -y \
+        sudo \
+        which \
         ca-certificates \
         procps \
         iputils-ping \
@@ -27,4 +32,4 @@ RUN yum install -y \
     && yum clean all \
     && rm -rf /var/cache/yum/*
 VOLUME [ "/sys/fs/cgroup" ]
-CMD ["/usr/sbin/init"]
+CMD ["/usr/lib/systemd/systemd"]
