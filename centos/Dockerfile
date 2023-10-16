@@ -31,5 +31,7 @@ RUN yum makecache fast \
     && echo "${TZ}" > /etc/timezone \
     && yum clean all \
     && rm -rf /var/cache/yum/*
+RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
+
 VOLUME [ "/sys/fs/cgroup" ]
-CMD ["/usr/lib/systemd/systemd"]
+CMD ["/usr/sbin/init"]
