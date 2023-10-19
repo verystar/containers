@@ -95,7 +95,7 @@ jobs:
       - name: Failure Notify
         if: ${{ success() }}
         run: |
-          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ secrets.WECOM_TOKEN }}' \
+          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ vars.WECOM_TOKEN }}' \
             -H 'Content-Type: application/json' \
             -d '
               {
@@ -114,7 +114,7 @@ jobs:
       - name: Failure Notify
         if: ${{ failure() }}
         run: |
-          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ secrets.WECOM_TOKEN }}' \
+          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ var.WECOM_TOKEN }}' \
             -H 'Content-Type: application/json' \
             -d '
               {
