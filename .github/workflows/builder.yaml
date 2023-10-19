@@ -5,7 +5,7 @@ on:
     tags:
       - "redis-*"
     branches:
-      - main
+      - testing
   workflow_dispatch:
 
 jobs:
