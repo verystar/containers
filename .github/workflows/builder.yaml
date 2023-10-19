@@ -1,0 +1,128 @@
+name: Builder
+
+on:
+  push:
+    tags:
+      - "redis-*"
+  workflow_dispatch:
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get current date
+        id: current_date
+        run: |
+          echo "day_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "detail_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Setup Node Version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Get Semver Version
+        id: get-version
+        run: |
+          npm install -g semver
+          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '-' '{print $1}')" >> $GITHUB_ENV
+          echo "latest_version=$(git describe --abbrev=0 --tags |awk -F '-' '{print $2}')" >> $GITHUB_ENV
+          echo "tag_length=$(grep -o '\.' <<< $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}') | wc -l) " >> $GITHUB_ENV
+          echo "version=$(semver --coerce $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}'))" >> $GITHUB_ENV
+
+      - name: Semver Parse
+        uses: terradatum/semver-action@main
+        id: semver
+        with:
+          version: ${{ env.version }}
+
+      - name: Docker Metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/${{ env.image_name }}
+            verystar/${{ env.image_name }}
+            registry.verystar.net/library/${{ env.image_name }}
+          tags: |
+            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}
+            type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
+            type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}.${{ steps.semver.outputs.minor }},enable=${{ env.tag_length == 2 }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to DockerHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to ACR Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: registry.verystar.net
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: "{{defaultContext}}:${{ env.image_name }}"
+          push: true
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            VERSION=${{ env.latest_version }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # 成功通知
+      - name: Failure Notify
+        if: ${{ success() }}
+        run: |
+          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ vars.WECOM_TOKEN }}' \
+            -H 'Content-Type: application/json' \
+            -d '
+              {
+                  "msgtype": "markdown",
+                  "markdown": {
+                    "content": "GitHub Actions<font color=\"info\">构建成功</font>\n
+                       >仓库名称:<font color=\"comment\">verystar/containers</font>
+                       >App名称:<font color=\"comment\">${{ env.image_name }}</font>
+                       >App版本:<font color=\"comment\">${{ env.latest_version }}</font>
+                       >报警信息:<font color=\"comment\">基础镜像构建成功</font>
+                       >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
+                  }
+              }'
+
+      # 失败通知
+      - name: Failure Notify
+        if: ${{ failure() }}
+        run: |
+          curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ vars.WECOM_TOKEN }}' \
+            -H 'Content-Type: application/json' \
+            -d '
+              {
+                  "msgtype": "markdown",
+                  "markdown": {
+                    "content": "GitHub Actions<font color=\"warning\">执行失败</font>，请注意!\n
+                       >仓库名称:<font color=\"comment\">verystar/containers</font>
+                       >App名称:<font color=\"comment\">${{ env.image_name }}</font>
+                       >App版本:<font color=\"comment\">${{ env.latest_version }}</font>
+                       >报警信息:<font color=\"comment\">基础镜像构建失败</font>
+                       >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
+                  }
+              }'
