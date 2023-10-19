@@ -30,7 +30,7 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')" >> $GITHUB_ENV
+          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '-' '{print $1}')" >> $GITHUB_ENV
           echo "latest_version=$(git describe --abbrev=0 --tags |awk -F '-' '{print $2}')" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}') | wc -l) " >> $GITHUB_ENV
           echo "version=$(semver --coerce $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}'))" >> $GITHUB_ENV
