@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - "redis-*"
-    branches:
-      - testing
   workflow_dispatch:
 
 jobs:
