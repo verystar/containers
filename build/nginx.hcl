@@ -5,7 +5,7 @@ target "common" {
 
 target "nginx-1-23-html" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.23.4"
     default_conf = "nginx.vh.html.conf"
@@ -20,7 +20,7 @@ target "nginx-1-23-html" {
 
 target "nginx-1-23-proxy" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.25.2"
     default_conf = "nginx.vh.proxy.conf"
@@ -33,7 +33,7 @@ target "nginx-1-23-proxy" {
 
 target "nginx-1-23-uwsgi" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.25.2"
     default_conf = "nginx.vh.uwsgi.conf"
@@ -46,7 +46,7 @@ target "nginx-1-23-uwsgi" {
 
 target "nginx-1-23-nsq" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.23.4"
     default_conf = "nginx.vh.nsq.conf"
@@ -60,7 +60,7 @@ target "nginx-1-23-nsq" {
 // https://learnku.com/docs/laravel/5.8/deployment/3884#server-configuration
 target "nginx-1-23-laravel" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.23.4"
     default_conf = "nginx.vh.laravel.conf"
@@ -76,7 +76,7 @@ target "nginx-1-23-laravel" {
 // https://www.laruence.com/manual/tutorial.firstpage.html
 target "nginx-1-23-yaf" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
+  platforms = ["linux/amd64", "linux/arm64"]
   args = {
     nginx_version = "1.23.4"
     default_conf = "nginx.vh.yaf.conf"
