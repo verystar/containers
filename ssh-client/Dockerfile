@@ -5,6 +5,6 @@ LABEL maintainer="www.verystar.net"
 ENV TZ=Asia/Shanghai
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        openssl-client \
+        openssh-client \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
