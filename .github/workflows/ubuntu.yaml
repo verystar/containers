@@ -38,10 +38,10 @@ jobs:
           node-version: 18.x
 
       - name: Get Semver Version
+        uses: olegsu/semver-action@v1
         id: get-version
-        run: |
-          npm install -g semver
-          echo "version=$(semver --coerce ${{ matrix.version }})" >> $GITHUB_OUTPUT
+        with:
+          version: ${{ matrix.version }}
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
