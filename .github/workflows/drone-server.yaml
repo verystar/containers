@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: drone-server
-  IMAGE_LATEST_TAG: 2.17.0
+  IMAGE_LATEST_TAG: 2.22.0
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 2.17.0
+          - version: 2.22.0
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -31,14 +31,14 @@ jobs:
       - name: Checkou Harness Drone
         uses: actions/checkout@v3
         with:
-          repository: harness/drone
+          repository: harness/gitness
           ref: v${{ matrix.version }}
           path: ${{ env.IMAGE_NAME }}
 
       - name: Setup Go Version
         uses: actions/setup-go@v4
         with:
-          go-version: "^1.20.4"
+          go-version: "^1.21.3"
 
       - uses: actions/cache@v3
         with:
