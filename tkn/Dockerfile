@@ -1,4 +1,4 @@
-FROM bitnami/kubectl:1.26
+FROM bitnami/kubectl:1.28
 
 ARG VERSION
 LABEL maintainer="www.verystar.net"
@@ -9,6 +9,9 @@ RUN apt update && apt upgrade -y && \
         ca-certificates && \
     curl -LO https://github.com/tektoncd/cli/releases/download/v${VERSION}/tkn_${VERSION}_Linux_x86_64.tar.gz \
     && tar -xvf tkn_${VERSION}_Linux_x86_64.tar.gz -C /usr/local/bin tkn \
-    && rm -rf tkn_${VERSION}_Linux_x86_64.tar.gz
+    && rm -rf tkn_${VERSION}_Linux_x86_64.tar.gz \
+    && apt clean \
+    && apt autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
 ENTRYPOINT [ "/usr/local/bin/tkn" ]
 CMD [ "--help" ]
