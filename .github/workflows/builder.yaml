@@ -49,9 +49,9 @@ jobs:
             verystar/${{ env.image_name }}
             registry.verystar.net/library/${{ env.image_name }}
           tags: |
-            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}
+            type=raw,value=${{ env.latest_version }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
-            type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}.${{ steps.semver.outputs.minor }},enable=${{ env.tag_length == 2 }}
+            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
