@@ -12,12 +12,12 @@ target "toolkit" {
     aliyun_cli_version = "v3"
     kubectl_version = "v1.26.0"
     kustomize_version = "v5.1.0"
-    argocd_version = "v2.9.1"
+    argocd_version = "v2.9.3"
     yq_version = "v4.27.2"
   }
   // kubectl: https://dl.k8s.io/release/v1.22.0/bin/linux/amd64/kubectl
   // kustomize: https://github.com/kubernetes-sigs/kustomize/releases
   tags = [
-    "registry.verystar.net/library/toolkit:v1.5.0",
+    "registry.verystar.net/library/toolkit:v1.5.1",
   ]
 }
