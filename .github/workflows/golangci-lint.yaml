@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: golangci-lint
-  IMAGE_LATEST_TAG: 1.54.1
+  IMAGE_LATEST_TAG: 1.56.2
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 1.54.1
+          - version: 1.56.2
           - version: 1.53.3
     steps:
       - name: Checkout
