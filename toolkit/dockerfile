@@ -6,7 +6,7 @@ ARG kustomize_version
 ARG argocd_version
 ARG yq_version
 
-FROM registry.verystar.net/library/debian:${debian_version}
+FROM --platform=arm64 registry.verystar.net/library/debian:${debian_version}
 
 ARG kubewatch_version
 ARG aliyun_cli_version
