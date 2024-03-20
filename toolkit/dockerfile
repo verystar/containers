@@ -1,23 +1,18 @@
 ARG debian_version
-ARG kubewatch_version
 ARG aliyun_cli_version
 ARG kubectl_version
 ARG kustomize_version
 ARG argocd_version
 ARG yq_version
 
-FROM --platform=arm64 registry.verystar.net/library/debian:${debian_version}
+FROM --platform=amd64 registry.verystar.net/library/debian:${debian_version}
 
-ARG kubewatch_version
 ARG aliyun_cli_version
 ARG kubectl_version
 ARG kustomize_version
 ARG argocd_version
 ARG yq_version
 
-# kubewatch
-RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/kubewatch/${kubewatch_version}/kubewatch -o /usr/local/bin/kubewatch \
-    && chmod +x /usr/local/bin/kubewatch
 # aliyun-cli
 RUN curl --silent -L https://verystar.oss-cn-hangzhou.aliyuncs.com/software/aliyun-cli/${aliyun_cli_version}/aliyun -o /usr/local/bin/aliyun \
     && chmod +x /usr/local/bin/aliyun
