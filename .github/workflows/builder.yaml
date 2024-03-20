@@ -3,10 +3,9 @@ name: Builder
 on:
   push:
     tags:
-      - "golang-*"
-      - "debian-*"
-      # 因为下面获取镜像的分隔符为-, 所以, 如果镜像中带-, 前期在打镜像时, 需要改成_
-      - "golangci_lint-*"
+      - "golang/*"
+      - "debian/*"
+      - "golangci-lint/*"
   workflow_dispatch:
 
 jobs:
@@ -31,16 +30,17 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '-' '{print $1}' |sed 's/_/-/g')" >> $GITHUB_ENV
-          echo "latest_version=$(git describe --abbrev=0 --tags |awk -F '-' '{print $2}')" >> $GITHUB_ENV
-          echo "tag_length=$(grep -o '\.' <<< $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}') | wc -l) " >> $GITHUB_ENV
-          echo "version=$(semver --coerce $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}'))" >> $GITHUB_ENV
+          image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
+          image_tag=$(git describe --abbrev=0 --tags |awk -F '/' '{print $2}' |awk -F '-' '{print $1}')
+          echo "image_name=${image_name}" >> $GITHUB_ENV
+          echo "latest_version=${image_tag}" >> $GITHUB_ENV
+          echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
         id: semver
         with:
-          version: ${{ env.version }}
+          version: ${{ env.latest_version }}
 
       - name: Docker Metadata
         id: meta
