@@ -5,6 +5,8 @@ on:
     tags:
       - "golang-*"
       - "debian-*"
+      # 因为下面获取镜像的分隔符为-, 所以, 如果镜像中带-, 前期在打镜像时, 需要改成_
+      - "golangci_lint-*"
   workflow_dispatch:
 
 jobs:
@@ -29,7 +31,7 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '-' '{print $1}')" >> $GITHUB_ENV
+          echo "image_name=$(git describe --abbrev=0 --tags |awk -F '-' '{print $1}' |sed 's/_/-/g')" >> $GITHUB_ENV
           echo "latest_version=$(git describe --abbrev=0 --tags |awk -F '-' '{print $2}')" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}') | wc -l) " >> $GITHUB_ENV
           echo "version=$(semver --coerce $(git describe --abbrev=0 --tags |awk -F '-' '{print $2}'))" >> $GITHUB_ENV
