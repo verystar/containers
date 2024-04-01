@@ -32,15 +32,16 @@ jobs:
           npm install -g semver
           image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
           image_tag=$(git describe --abbrev=0 --tags |awk -F '/' '{print $2}' |awk -F '-' '{print $1}')
+          echo "image_tag=${image_tag}" >> $GITHUB_ENV
           echo "image_name=${image_name}" >> $GITHUB_ENV
-          echo "latest_version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
+          echo "version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
         id: semver
         with:
-          version: ${{ env.latest_version }}
+          version: ${{ env.version }}
 
       - name: Docker Metadata
         id: meta
@@ -51,7 +52,7 @@ jobs:
             verystar/${{ env.image_name }}
             registry.verystar.net/library/${{ env.image_name }}
           tags: |
-            type=raw,value=${{ env.latest_version }}
+            type=raw,value=${{ env.image_tag }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
             type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}
 
@@ -88,7 +89,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
-            VERSION=${{ env.latest_version }}
+            VERSION=${{ env.image_tag }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -105,7 +106,7 @@ jobs:
                     "content": "GitHub Actions<font color=\"info\">构建成功</font>\n
                        >仓库名称:<font color=\"comment\">verystar/containers</font>
                        >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.latest_version }}</font>
+                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
                        >报警信息:<font color=\"comment\">基础镜像构建成功</font>
                        >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
                   }
@@ -124,7 +125,7 @@ jobs:
                     "content": "GitHub Actions<font color=\"warning\">执行失败</font>，请注意!\n
                        >仓库名称:<font color=\"comment\">verystar/containers</font>
                        >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.latest_version }}</font>
+                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
                        >报警信息:<font color=\"comment\">基础镜像构建失败</font>
                        >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
                   }
