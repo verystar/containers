@@ -33,7 +33,7 @@ jobs:
           image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
           image_tag=$(git describe --abbrev=0 --tags |awk -F '/' '{print $2}' |awk -F '-' '{print $1}')
           echo "image_name=${image_name}" >> $GITHUB_ENV
-          echo "latest_version=${image_tag}" >> $GITHUB_ENV
+          echo "latest_version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
 
       - name: Semver Parse
