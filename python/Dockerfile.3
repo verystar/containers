@@ -15,4 +15,3 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -r /var/lib/apt/lists/* \
     && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
-COPY pip.conf /root/.pip/pip.conf

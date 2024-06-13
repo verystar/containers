@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "golang/*"
+      - "python/*"
       - "debian/*"
       - "golangci-lint/*"
   workflow_dispatch:

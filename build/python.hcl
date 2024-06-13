@@ -34,11 +34,11 @@ target "python3-7" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.7.16"
+    python_version="3.7.17"
   }
   tags = [
     "registry.verystar.net/library/python:3.7",
-    "registry.verystar.net/library/python:3.7.16",
+    "registry.verystar.net/library/python:3.7.17",
   ]
 }
 
@@ -46,11 +46,11 @@ target "python3-8" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.8.16"
+    python_version="3.8.19"
   }
   tags = [
     "registry.verystar.net/library/python:3.8",
-    "registry.verystar.net/library/python:3.8.16",
+    "registry.verystar.net/library/python:3.8.19",
   ]
 }
 
@@ -58,11 +58,11 @@ target "python3-9" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.9.16"
+    python_version="3.9.19"
   }
   tags = [
     "registry.verystar.net/library/python:3.9",
-    "registry.verystar.net/library/python:3.9.16",
+    "registry.verystar.net/library/python:3.9.19",
   ]
 }
 
@@ -70,11 +70,11 @@ target "python3-10" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.10.11"
+    python_version="3.10.14"
   }
   tags = [
     "registry.verystar.net/library/python:3.10",
-    "registry.verystar.net/library/python:3.10.11",
+    "registry.verystar.net/library/python:3.10.14",
   ]
 }
 
@@ -82,11 +82,11 @@ target "python3-11" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.11.3"
+    python_version="3.11.9"
   }
   tags = [
     "registry.verystar.net/library/python:3.11",
-    "registry.verystar.net/library/python:3.11.3",
+    "registry.verystar.net/library/python:3.11.9",
   ]
 }
 
@@ -99,7 +99,7 @@ target "python3-9-ai" {
     python_version="3.9"
   }
   tags = [
-    "registry.verystar.net/library/python:3.9-ai-v4",
+    "registry.verystar.net/library/python:3.9-ai-v5",
   ]
 }
 
@@ -109,11 +109,11 @@ target "python3-8-aigc" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.8.13"
+    python_version="3.8.19"
   }
   tags = [
     "registry.verystar.net/library/python:3.8-aigc",
-    "registry.verystar.net/library/python:3.8.13-aigc",
+    "registry.verystar.net/library/python:3.8.19-aigc",
   ]
 }
 
@@ -123,10 +123,10 @@ target "python3-8-walking" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.8.13"
+    python_version="3.8.19"
   }
   tags = [
     "registry.verystar.net/library/python:3.8-walking",
-    "registry.verystar.net/library/python:3.8.13-walking",
+    "registry.verystar.net/library/python:3.8.19-walking",
   ]
 }
