@@ -37,6 +37,8 @@ jobs:
           echo "image_name=${image_name}" >> $GITHUB_ENV
           echo "version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
+          # 加载镜像构建环境变量
+          cat ${image_name}/.env >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
