@@ -90,6 +90,18 @@ target "python3-11" {
   ]
 }
 
+target "python3-11" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    python_version="3.12.0"
+  }
+  tags = [
+    "registry.verystar.net/library/python:3.12",
+    "registry.verystar.net/library/python:3.12.0",
+  ]
+}
+
 target "python3-9-ai" {
   context = "python/bigdata"
   dockerfile = "Dockerfile.ai"
