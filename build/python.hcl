@@ -90,7 +90,7 @@ target "python3-11" {
   ]
 }
 
-target "python3-11" {
+target "python3-12" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
