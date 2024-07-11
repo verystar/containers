@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "python/**"
+      - "build/python.hcl"
       - ".github/workflows/python.yaml"
   workflow_dispatch:
 
