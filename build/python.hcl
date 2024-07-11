@@ -94,11 +94,11 @@ target "python3-12" {
   inherits = ["common"]
   platforms = ["linux/amd64"]
   args = {
-    python_version="3.12.0"
+    python_version="3.12.1"
   }
   tags = [
     "registry.verystar.net/library/python:3.12",
-    "registry.verystar.net/library/python:3.12.0",
+    "registry.verystar.net/library/python:3.12.1",
   ]
 }
 
