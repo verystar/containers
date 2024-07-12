@@ -57,7 +57,7 @@ jobs:
           tags: |
             type=raw,value=${{ matrix.version }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
-            type=raw,value=${{ steps.semver.outputs.major }}
+            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
             type=raw,value=latest,enable=${{ matrix.version == env.IMAGE_LATEST_TAG }}
 
       - name: Set up QEMU
