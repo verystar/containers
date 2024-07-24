@@ -32,8 +32,9 @@ target "php7-1" {
     ssh2_version = "1.2"
   }
   tags = [
-    "registry.verystar.net/library/php:7.1-fpm",
-    "registry.verystar.net/library/php:7.1.33-fpm",
+    // "registry.verystar.net/library/php:7.1-fpm",
+    // "registry.verystar.net/library/php:7.1.33-fpm",
+    "registry.verystar.net/library/php:7.1.33-fpm-v5",
   ]
 }
 
@@ -50,8 +51,9 @@ target "php7-3" {
     ssh2_version = "1.3.1"
   }
   tags = [
-    "registry.verystar.net/library/php:7.3-fpm",
-    "registry.verystar.net/library/php:7.3.33-fpm",
+    // "registry.verystar.net/library/php:7.3-fpm",
+    // "registry.verystar.net/library/php:7.3.33-fpm",
+    "registry.verystar.net/library/php:7.3.33-fpm-v5",
   ]
 }
 
