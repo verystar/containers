@@ -16,9 +16,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libxslt1-dev \
     libmcrypt-dev \
+    libevent-dev \
     && rm -r /var/lib/apt/lists/* \
     && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
-    && echo "${TZ}" > /etc/timezone 
+    && echo "${TZ}" > /etc/timezone
+
 RUN docker-php-ext-install bcmath zip pdo_mysql mysqli opcache xsl gettext ldap mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install gd \
@@ -48,7 +50,15 @@ RUN docker-php-ext-install bcmath zip pdo_mysql mysqli opcache xsl gettext ldap 
     && rm -f mcrypt-1.0.1.tgz \
     && docker-php-ext-configure /tmp/mcrypt \
     && docker-php-ext-install /tmp/mcrypt \
-    && rm -rf /tmp/mcrypt
+    && rm -rf /tmp/mcrypt \
+    # Install nsq extension
+    curl -fsSL https://pecl.php.net/get/nsq-3.5.1.tgz -o nsq-3.5.1.tgz \
+    && mkdir -p /tmp/nsq \
+    && tar xf nsq-3.5.1.tgz -C /tmp/nsq --strip-components=1 \
+    && rm -f nsq-3.5.1.tgz \
+    && docker-php-ext-configure /tmp/nsq --with-libevent-path=/usr \
+    && docker-php-ext-install /tmp/nsq \
+    && rm -rf /tmp/nsq
 
 RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf \
     && echo "request_slowlog_timeout = 3" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
