@@ -38,6 +38,24 @@ target "php7-1" {
   ]
 }
 
+target "pay-php7-1" {
+  context = "php/7.1-fpm/pay"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    php_version = "7.1.33-fpm"
+    redis_version = "4.2.0"
+    yaf_version = "3.0.7"
+    libssh2_version = "1.9.0"
+    ssh2_version = "1.2"
+  }
+  tags = [
+    "registry.verystar.net/library/php:7.1-pay-fpm",
+    "registry.verystar.net/library/php:7.1.33-pay-fpm",
+    "registry.verystar.net/library/php:7.1.33-pay-fpm-v1",
+  ]
+}
+
 target "php7-3" {
   context = "php/7.3-fpm"
   inherits = ["common"]
@@ -54,6 +72,25 @@ target "php7-3" {
     // "registry.verystar.net/library/php:7.3-fpm",
     // "registry.verystar.net/library/php:7.3.33-fpm",
     "registry.verystar.net/library/php:7.3.33-fpm-v5",
+  ]
+}
+
+target "pay-php7-3" {
+  context = "php/7.3-fpm/pay"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    php_version = "7.3.33-fpm"
+    redis_version = "5.3.7"
+    yaf_version = "3.3.5"
+    mcrypt_version = "1.0.5"
+    libssh2_version = "1.10.0"
+    ssh2_version = "1.3.1"
+  }
+  tags = [
+    "registry.verystar.net/library/php:7.3-pay-fpm",
+    "registry.verystar.net/library/php:7.3.33-pay-fpm",
+    "registry.verystar.net/library/php:7.3.33-pay-fpm-v1",
   ]
 }
 
