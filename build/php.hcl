@@ -111,25 +111,6 @@ target "nippon-php7-1" {
 }
 
 
-target "starbucks-php7-3" {
-  context = "php/7.3-fpm/starbucks"
-  inherits = ["common"]
-  platforms = ["linux/amd64"]
-  args = {
-    php_version = "7.3.33"
-    redis_version = "5.3.7"
-    yaf_version = "3.3.5"
-    mcrypt_version = "1.0.5"
-    libssh2_version = "1.10.0"
-    ssh2_version = "1.3.1"
-  }
-  tags = [
-    "verystar/php:7.3-fpm",
-    "verystar/php:7.3.33-fpm",
-  ]
-}
-
-
 target "starbucks-php7-4" {
   context = "php/7.4-fpm/starbucks"
   inherits = ["common"]
