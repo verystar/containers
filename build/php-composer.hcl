@@ -12,7 +12,6 @@ target "php54-composer18" {
   }
   tags = [
     "registry.verystar.net/library/php:5.4.45-composer-1.8.0",
-    "registry.verystar.net/library/composer:5.4.45-composer-1.8.0",
   ]
 }
 
@@ -26,7 +25,6 @@ target "php71-composer19" {
   }
   tags = [
     "registry.verystar.net/library/php:7.1.33-composer-1.9.1",
-    "registry.verystar.net/library/composer:7.1.33-composer-1.9.1",
   ]
 }
 
@@ -40,7 +38,6 @@ target "php71-composer22" {
   }
   tags = [
     "registry.verystar.net/library/php:7.1.33-composer-2.2.0",
-    "registry.verystar.net/library/composer:7.1.33-composer-2.2.0",
   ]
 }
 
@@ -54,7 +51,6 @@ target "php73-composer19" {
   }
   tags = [
     "registry.verystar.net/library/php:7.3.33-composer-1.9.1",
-    "registry.verystar.net/library/composer:7.3.33-composer-1.9.1",
   ]
 }
 
@@ -68,7 +64,20 @@ target "php73-composer22" {
   }
   tags = [
     "registry.verystar.net/library/php:7.3.33-composer-2.2.0",
-    "registry.verystar.net/library/composer:7.3.33-composer-2.2.0",
+  ]
+}
+
+target "php82-composer" {
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  context = "php/8.2-composer"
+  args = {
+    php_version = "8.2.22-fpm"
+    composer_version = "2.7.7"
+  }
+  tags = [
+    "registry.verystar.net/library/php:8.2-composer-2.7.7",
+    "registry.verystar.net/library/php:8.2.22-composer-2.7.7",
   ]
 }
 
