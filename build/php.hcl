@@ -59,41 +59,6 @@ target "php7-3" {
 }
 
 
-target "php7-3-12" {
-  context = "php/7.3-fpm"
-  inherits = ["common"]
-  platforms = ["linux/amd64"]
-  args = {
-    php_version = "7.3.12-fpm"
-    redis_version = "4.2.0"
-    yaf_version = "3.0.8"
-    mcrypt_version = "1.0.1"
-    libssh2_version = "1.9.0"
-    ssh2_version = "1.2"
-  }
-  tags = [
-    "registry.verystar.net/library/php:7.3.12-fpm",
-  ]
-}
-
-target "php7-3-21" {
-  context = "php/7.3-fpm"
-  inherits = ["common"]
-  platforms = ["linux/amd64"]
-  args = {
-    php_version = "7.3.21-fpm"
-    redis_version = "5.3.0"
-    yaf_version = "3.2.4"
-    mcrypt_version = "1.0.3"
-    libssh2_version = "1.9.0"
-    ssh2_version = "1.2"
-  }
-  tags = [
-    "registry.verystar.net/library/php:7.3-fpm",
-    "registry.verystar.net/library/php:7.3.21-fpm",
-  ]
-}
-
 target "nippon-php7-1" {
   context = "php/7.1-fpm"
   inherits = ["common"]
