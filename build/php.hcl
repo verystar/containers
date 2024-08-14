@@ -58,6 +58,25 @@ target "php7-3" {
   ]
 }
 
+target "php8-2" {
+  context = "php/8.2-fpm"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    php_version = "8.2.22-fpm"
+    redis_version = "6.0.2"
+    yaf_version = "3.3.6"
+    mcrypt_version = "1.0.5"
+    libssh2_version = "1.11.0"
+    ssh2_version = "1.4.1"
+  }
+  tags = [
+    "registry.verystar.net/library/php:8.2-fpm",
+    "registry.verystar.net/library/php:8.2.22-fpm",
+    "registry.verystar.net/library/php:8.2.22-fpm-v1",
+  ]
+}
+
 
 target "nippon-php7-1" {
   context = "php/7.1-fpm"
