@@ -16,7 +16,7 @@ ENV PATH "$MAVEN_DIR/bin:$GRADLE_DIR/bin:$PATH"
 RUN apt update ; \
     apt install -y --no-install-recommends unzip \
     && rm -rf /var/lib/apt/lists/* \
-    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
 
 # maven

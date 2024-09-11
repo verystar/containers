@@ -27,7 +27,7 @@ RUN yum makecache fast \
         wget \
         iproute \
         tzdata \
-    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone \
     && yum clean all \
     && rm -rf /var/cache/yum/*

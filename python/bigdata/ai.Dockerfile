@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsnappy-dev \
     zip \
     && rm -r /var/lib/apt/lists/* \
-    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
 
 WORKDIR /usr/share/nginx/html

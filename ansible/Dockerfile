@@ -11,5 +11,5 @@ RUN pip install pipenv --no-cache-dir \
     && pip install --upgrade pip \
     && pip install ansible==${ansible_version}
 
-RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+RUN ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone

@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libmcrypt-dev \
     libevent-dev \
     && rm -r /var/lib/apt/lists/* \
-    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
 
 RUN docker-php-ext-install bcmath zip pdo_mysql mysqli opcache xsl gettext mcrypt pcntl \

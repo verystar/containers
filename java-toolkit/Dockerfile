@@ -16,7 +16,7 @@ ENV PATH "$MAVEN_DIR/bin:$GRADLE_DIR/bin:$PATH"
 RUN yum update ; \
     yum install -y --setopt=skip_missing_names_on_install=False unzip tar gzip \
     && rm -rf /var/cache/yum \
-    && cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
 
 # maven
