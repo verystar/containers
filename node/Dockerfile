@@ -25,7 +25,7 @@ ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com \
     SELENIUM_CDNURL=https://npmmirror.com/mirrors/selenium \
     NODE_INSPECTOR_CDNURL=https://npmmirror.com/mirrors/node-inspector
 
-RUN npm install -g pnpm@${PNPM} cnpm@${CNPM} webpack-dev-server \
+RUN npm install -g pnpm@${PNPM} cnpm@${CNPM} webpack-dev-server pm2 \
     && mkdir ~/.ssh \
     && chmod 700 ~/.ssh \
     && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
