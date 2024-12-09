@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libopencv-dev \
     libsnappy-dev \
     zip \
-    && wget -O /tmp/wkhtmltopdf_0.12.6-2+b1_amd64.deb http://ftp.us.debian.org/debian/pool/main/w/wkhtmltopdf/wkhtmltopdf_0.12.6-2+b1_amd64.deb
+    && wget -O /tmp/wkhtmltopdf_0.12.6-2+b1_amd64.deb http://ftp.us.debian.org/debian/pool/main/w/wkhtmltopdf/wkhtmltopdf_0.12.6-2+b1_amd64.deb \
     && apt-get install /tmp/wkhtmltopdf_0.12.6-2+b1_amd64.deb \
     && rm /tmp/wkhtmltopdf_0.12.6-2+b1_amd64.deb \
     && rm -r /var/lib/apt/lists/* \
