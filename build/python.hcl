@@ -142,3 +142,18 @@ target "python3-8-walking" {
     "registry.verystar.net/library/python:3.8.19-walking",
   ]
 }
+
+// for dentsu nextgen ccl
+target "python3-8-ccl" {
+  context = "python/bigdata"
+  dockerfile = "ccl.Dockerfile"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    python_version="3.8.19"
+  }
+  tags = [
+    "registry.verystar.net/library/python:3.8-ccl",
+    "registry.verystar.net/library/python:3.8.19-ccl",
+  ]
+}
