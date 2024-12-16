@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: node
-  IMAGE_LATEST_TAG: 21.7.1
+  IMAGE_LATEST_TAG: 23.3.0
 
 jobs:
   build-and-push-image:
@@ -24,6 +24,9 @@ jobs:
       matrix:
         include:
           # https://pnpm.io/installation#compatibility
+          - version: 23.3.0
+            pnpm: 9
+            cnpm: 9
           - version: 21.7.1
             pnpm: 8
             cnpm: 9
