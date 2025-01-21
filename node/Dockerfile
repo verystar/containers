@@ -29,3 +29,7 @@ RUN npm install -g pnpm@${PNPM} cnpm@${CNPM} webpack-dev-server pm2 \
     && mkdir ~/.ssh \
     && chmod 700 ~/.ssh \
     && echo "    StrictHostKeyChecking no" >> /etc/ssh/ssh_config
+
+## For Tekton CI
+RUN groupadd --gid 65532 tekton && \
+    useradd --uid 65532 --gid tekton --home-dir /home/tekton --create-home --shell /bin/bash tekton
