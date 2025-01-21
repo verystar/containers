@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push
-        uses: docker/bake-action@v2
+        uses: docker/bake-action@v6
         with:
           context: nginx
           files: build/nginx.hcl
