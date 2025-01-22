@@ -7,5 +7,5 @@ RUN apk add --no-cache yq tzdata && \
     rm -rf /var/cache/apk/*
 
     ## For Tekton CI
-RUN groupadd --gid 65532 tekton && \
-    useradd --uid 65532 --gid tekton --home-dir /home/tekton --create-home --shell /bin/bash tekton
+RUN addgroup -g 65532 tekton && \
+    adduser -u 65532 -G tekton -h /home/tekton -s /bin/sh -D tekton
