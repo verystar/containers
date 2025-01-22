@@ -24,6 +24,10 @@ RUN apt-get update && \
     rm -f /lib/systemd/system/plymouth* && \
     rm -f /lib/systemd/system/systemd-update-utmp*
 
+## For Tekton CI
+RUN groupadd --gid 65532 tekton && \
+    useradd --uid 65532 --gid tekton --home-dir /home/tekton --create-home --shell /bin/bash tekton
+
 VOLUME [ "/sys/fs/cgroup" ]
 
 CMD ["/lib/systemd/systemd"]
