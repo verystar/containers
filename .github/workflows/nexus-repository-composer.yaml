@@ -50,9 +50,9 @@ jobs:
           ref: composer-parent-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
           path: nexus-repository-composer
 
-      - name: Change JDK Version
-        run: |
-          sed -i 's/3-jdk-8-alpine/3-jdk-8/g' nexus-repository-composer/Dockerfile
+      # - name: Change JDK Version
+      #   run: |
+      #     sed -i 's/3-jdk-8-alpine/3-jdk-8/g' nexus-repository-composer/Dockerfile
 
       - name: Setup Node Version
         uses: actions/setup-node@v3
