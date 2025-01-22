@@ -61,3 +61,4 @@ jobs:
             python3-11
             python3-12
             python3-8-ccl
+            python3-13-tekton

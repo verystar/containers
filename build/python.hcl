@@ -157,3 +157,18 @@ target "python3-8-ccl" {
     "registry.verystar.net/library/python:3.8.19-ccl",
   ]
 }
+
+// for tektoncd (saltstack)
+target "python3-13-tekton" {
+  context = "python/devops"
+  dockerfile = "tekton.Dockerfile"
+  inherits = ["common"]
+  platforms = ["linux/amd64"]
+  args = {
+    python_version="3.13.1"
+  }
+  tags = [
+    "registry.verystar.net/library/python:3.13-tekton",
+    "registry.verystar.net/library/python:3.13.1-tekton",
+  ]
+}
