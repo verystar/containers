@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'ossutil/**'
-      - '.github/workflows/ossutil.yaml'
+      - "ossutil/**"
+      - ".github/workflows/ossutil.yaml"
   workflow_dispatch:
 
 permissions:
@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: ossutil
-  IMAGE_LATEST_TAG: v1.7.18
+  IMAGE_LATEST_TAG: v1.7.19
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: v1.7.18
+          - version: v1.7.19
 
     steps:
       - name: Checkout
@@ -88,7 +88,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: '{{defaultContext}}:${{ env.IMAGE_NAME }}'
+          context: "{{defaultContext}}:${{ env.IMAGE_NAME }}"
           push: true
           platforms: linux/amd64
           # linux/arm64
