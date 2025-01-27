@@ -84,7 +84,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ env.image_name }}"
           push: true
