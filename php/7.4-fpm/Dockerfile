@@ -5,9 +5,9 @@ ARG yaf_version
 ARG libssh2_version
 ARG ssh2_version
 
-FROM php:${php_version}-fpm
+FROM php:${php_version:-"7.4-fpm"}
 
-LABEL maintainer="www.verystar.net"
+LABEL org.opencontainers.image.authors="www.verystar.net"
 
 ARG mcrypt_version
 ARG redis_version
@@ -16,8 +16,17 @@ ARG libssh2_version
 ARG ssh2_version
 
 # # ENV REQUEST_TIMEOUT 10
-ENV TZ Asia/Shanghai
+ENV TZ=Asia/Shanghai
+ENV SESSION_SAVE_PATH="tcp://r-bp12479e0cae1bb4.redis.rds.aliyuncs.com:6379"
 
+# Print Extension Version
+RUN echo "redis version: ${redis_version}" \
+    && echo "yaf version: ${yaf_version}" \
+    && echo "mcrypt version: ${mcrypt_version}" \
+    && echo "libssh2 version: ${libssh2_version}" \
+    && echo "ssh2 version: ${ssh2_version}"
+
+COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
     # 修复漏洞
     curl \

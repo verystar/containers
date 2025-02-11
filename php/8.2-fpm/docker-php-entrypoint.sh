@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 
-# 如果为星巴克忽略这里
 if [ ! -z "${SESSION_SAVE_PATH}" ]; then
     echo "php_value[session.save_path] = \"${SESSION_SAVE_PATH}\"" >> /usr/local/etc/php-fpm.d/zz-docker.conf
     echo "session.save_handler = \"${SESSION_SAVE_PATH}\"" >> /usr/local/etc/php/php.ini

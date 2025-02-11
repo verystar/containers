@@ -2,13 +2,9 @@ ARG php_version
 ARG composer_version
 
 # 使用线上 PHP 镜像作为基础基础镜像
-FROM registry.verystar.net/library/php:${php_version:-7.1}-fpm
-
+FROM registry.verystar.net/library/php:${php_version:-"7.1-fpm"}
 ARG composer_version
-LABEL org.opencontainers.image.url=https://www.verystar.net/
-LABEL org.opencontainers.image.version=${composer_version}
-LABEL org.opencontainers.image.authors="www.verystar.net"
-LABEL org.opencontainers.image.description="PHP Composer"
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/tmp
 ENV COMPOSER_VERSION=${composer_version}
@@ -41,7 +37,7 @@ RUN set -eux; \
   --no-ansi \
   --install-dir=/usr/bin \
   --filename=composer \
-  --version=${COMPOSER_VERSION} \
+  --version=${composer_version} \
   ; \
   composer --ansi --version --no-interaction; \
   rm -f /tmp/installer.php; \

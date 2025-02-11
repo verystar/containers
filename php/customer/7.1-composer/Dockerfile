@@ -1,16 +1,15 @@
 # 使用线上 PHP 镜像作为基础基础镜像
-FROM registry.verystar.net/library/php:7.3.12-fpm
+FROM verystar/php:7.1-fpm
 
-LABEL maintainer="www.verystar.net"
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/tmp
+ENV COMPOSER_VERSION=1.9.1
 
+RUN useradd -u 65532 -m tekton
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   tini \
   ssh-client
-
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION 2.1.8
 
 RUN set -eux; \
   curl --silent --fail --location --retry 3 --output /tmp/installer.php --url https://raw.githubusercontent.com/composer/getcomposer.org/cb19f2aa3aeaa2006c0cd69a7ef011eb31463067/web/installer; \
@@ -31,5 +30,5 @@ COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 WORKDIR /app
 
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["composer"]

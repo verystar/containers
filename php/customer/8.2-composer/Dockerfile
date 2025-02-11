@@ -1,13 +1,9 @@
-ARG php_version
-ARG composer_version
-
 # 使用线上 PHP 镜像作为基础基础镜像
-FROM registry.verystar.net/library/php:${php_version:-"8.2-fpm"}
-ARG composer_version
+FROM verystar/php:8.2-fpm
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV COMPOSER_HOME=/tmp
-ENV COMPOSER_VERSION=${composer_version}
+ENV COMPOSER_VERSION=2.2.0
 
 RUN useradd -u 65532 -m tekton
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -32,7 +28,7 @@ RUN set -eux; \
   --no-ansi \
   --install-dir=/usr/bin \
   --filename=composer \
-  --version=${composer_version} \
+  --version=${COMPOSER_VERSION} \
   ; \
   composer --ansi --version --no-interaction; \
   composer diagnose; \

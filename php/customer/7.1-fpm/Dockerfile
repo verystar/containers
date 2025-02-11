@@ -1,16 +1,14 @@
 FROM php:7.1.33-fpm
 
-LABEL maintainer="www.verystar.net"
+LABEL org.opencontainers.image.authors="www.verystar.net"
 # ENV REQUEST_TIMEOUT 10
-ENV TZ Asia/Shanghai
-ENV REDIS_VERSION 4.2.0
-ENV YAF_VERSION 3.0.7
-ENV LIBSSH2_VERSION 1.9.0
-ENV SSH2_VERSION 1.2
+ENV TZ=Asia/Shanghai
+ENV REDIS_VERSION=4.2.0
+ENV YAF_VERSION=3.0.7
+ENV LIBSSH2_VERSION=1.9.0
+ENV SSH2_VERSION=1.2
 
-RUN sed -i "s|deb.debian.org|mirrors.aliyun.com|g" /etc/apt/sources.list
-RUN sed -i "/security.debian.org/d" /etc/apt/sources.list
-
+COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
     autoconf \
     libaio-dev \
