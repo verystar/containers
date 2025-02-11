@@ -5,15 +5,20 @@ ARG composer_version
 FROM registry.verystar.net/library/php:${php_version}
 
 ARG composer_version
-LABEL maintainer="www.verystar.net"
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp
-ENV COMPOSER_VERSION ${composer_version}
+LABEL org.opencontainers.image.url=https://www.verystar.net/
+LABEL org.opencontainers.image.version=${composer_version}
+LABEL org.opencontainers.image.authors="www.verystar.net"
+LABEL org.opencontainers.image.description="PHP Composer"
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/tmp
+ENV COMPOSER_VERSION=${composer_version}
 
+RUN useradd -u 65532 -m tekton
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   tini \
-  ssh-client
+  ssh-client \
+  && rm -rf /var/lib/apt/lists/*
 
 # https://github.com/composer/docker
 RUN set -eux; \

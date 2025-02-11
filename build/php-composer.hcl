@@ -25,6 +25,7 @@ target "php71-composer19" {
   }
   tags = [
     "registry.verystar.net/library/php:7.1.33-composer-1.9.1",
+    "registry.verystar.net/library/php:7.1.33-composer-1.9.1-20250211151103",
   ]
 }
 
@@ -38,6 +39,7 @@ target "php71-composer22" {
   }
   tags = [
     "registry.verystar.net/library/php:7.1.33-composer-2.2.0",
+    "registry.verystar.net/library/php:7.1.33-composer-2.2.0-20250211071331",
   ]
 }
 
@@ -51,6 +53,7 @@ target "php73-composer19" {
   }
   tags = [
     "registry.verystar.net/library/php:7.3.33-composer-1.9.1",
+    "registry.verystar.net/library/php:7.3.33-composer-1.9.1-20250211151553",
   ]
 }
 
@@ -64,6 +67,7 @@ target "php73-composer22" {
   }
   tags = [
     "registry.verystar.net/library/php:7.3.33-composer-2.2.0",
+    "registry.verystar.net/library/php:7.3.33-composer-2.2.0-20250211151853",
   ]
 }
 
