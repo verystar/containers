@@ -2,17 +2,23 @@ ARG php_version
 ARG composer_version
 
 # 使用线上 PHP 镜像作为基础基础镜像
-FROM verystar/php:${php_version}
+FROM verystar/php:${php_version:-7.4}-fpm
 ARG composer_version
 
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_HOME /tmp
+LABEL org.opencontainers.image.url=https://www.verystar.net/
+LABEL org.opencontainers.image.version=${composer_version}
+LABEL org.opencontainers.image.authors="www.verystar.net"
+LABEL org.opencontainers.image.description="PHP Composer"
+ENV COMPOSER_ALLOW_SUPERUSER=1
+ENV COMPOSER_HOME=/tmp
+ENV COMPOSER_VERSION=${composer_version}
 
-RUN apt-get update
+RUN useradd -u 65532 -m tekton
 RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   tini \
-  openssh-client
+  openssh-client \
+  && rm -rf /var/lib/apt/lists/*
 
 # https://github.com/composer/docker
 RUN set -eux; \
