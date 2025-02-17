@@ -15,8 +15,3 @@ RUN curl -skL -o /tmp/ossutil.zip https://github.com/aliyun/ossutil/releases/dow
     && unzip /tmp/ossutil.zip -d /tmp \
     && mv /tmp/ossutil-${VERSION}-linux-amd64/* /usr/local/bin/ \
     && rm /tmp/ossutil.zip
-
-## For Tekton CI
-RUN groupadd --gid 65532 tekton && \
-    useradd --uid 65532 --gid tekton --home-dir /home/tekton --create-home --shell /bin/bash tekton
-USER tekton
