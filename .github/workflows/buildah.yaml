@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: buildah
-  IMAGE_LATEST_TAG: 1.38.0
+  IMAGE_LATEST_TAG: 1.38.1
 
 jobs:
   build-and-push-image:
@@ -23,9 +23,9 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 1.38.0
-          - version: 1.36.0
-          - version: 1.35.4
+          - version: 1.38.1
+          # - version: 1.36.0
+          # - version: 1.35.4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
