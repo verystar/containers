@@ -15,7 +15,7 @@ permissions:
 env:
   IMAGE_NAME: nexus-repository-composer
   NEXUS_REPOSITORY_COMPOSER_VERSION: 0.1.9
-  IMAGE_LATEST_TAG: 3.76.0
+  IMAGE_LATEST_TAG: 3.77.2
 
 jobs:
   build-and-push-image:
@@ -24,7 +24,8 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 3.76.0
+          - version: 3.77.2
+          # - version: 3.76.0
           # - version: 3.75.1
           # - version: 3.74.0
           # - version: 3.73.0
