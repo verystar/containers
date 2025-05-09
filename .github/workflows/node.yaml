@@ -30,7 +30,7 @@ jobs:
           - version: 21.7.1
             pnpm: 10
             cnpm: 9
-          - version: 20.3.0
+          - version: 20.4.0
             pnpm: 10
             cnpm: 9
           - version: 19.9.0
