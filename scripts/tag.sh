@@ -40,6 +40,9 @@ function delete_tag() {
 
 # 运行
 function run() {
+  # 移除本地所有tag
+  git tag -l |xargs -I {} git tag -d {}
+
   # 拉取最新代码
   green "===>>> 拉取最新代码"
   git pull
