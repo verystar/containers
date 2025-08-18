@@ -26,10 +26,10 @@ jobs:
           - version: 2.23.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Checkou Harness Drone
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: harness/gitness
           ref: v${{ matrix.version }}
