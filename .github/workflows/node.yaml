@@ -27,6 +27,9 @@ jobs:
           - version: 23.3.0
             pnpm: 10
             cnpm: 9
+          - version: 22.19.0
+            pnpm: 10
+            cnpm: 9
           - version: 21.7.1
             pnpm: 10
             cnpm: 9
