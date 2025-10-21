@@ -7,14 +7,14 @@ target "nginx-1-23-html" {
   inherits = ["common"]
   platforms = ["linux/amd64", "linux/arm64"]
   args = {
-    nginx_version = "1.29.1"
+    nginx_version = "1.29.2"
     default_conf = "nginx.vh.html.conf"
   }
   tags = [
     "verystar/nginx:1.29",
-    "verystar/nginx:1.29.1",
+    "verystar/nginx:1.29.2",
     "registry.verystar.net/library/nginx:1.29",
-    "registry.verystar.net/library/nginx:1.29.1",
+    "registry.verystar.net/library/nginx:1.29.2",
   ]
 }
 
