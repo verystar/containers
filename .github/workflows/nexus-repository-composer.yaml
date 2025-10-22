@@ -61,7 +61,7 @@ jobs:
       #     sed -i 's/3-jdk-8-alpine/3-jdk-8/g' nexus-repository-composer/Dockerfile
 
       - name: Setup Node Version
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 18.x
 
