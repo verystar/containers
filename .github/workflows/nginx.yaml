@@ -68,7 +68,7 @@ jobs:
           tags: |
             type=raw,value=${{ env.image_tag }}${{ matrix.suffix }}
             type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}${{ matrix.suffix }}
-            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}${{ matrix.suffix }}
+            type=raw,value=${{ steps.semver.outputs.major }}${{ matrix.suffix }},enable=${{ env.tag_length == 1 }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
