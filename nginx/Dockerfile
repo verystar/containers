@@ -1,8 +1,8 @@
-ARG nginx_version
-ARG default_conf
+ARG VERSION
+ARG DEFAULT_CONF
 
-FROM nginx:${nginx_version}
-ARG default_conf
+FROM nginx:${VERSION}
+ARG DEFAULT_CONF
 
 LABEL maintainer="www.verystar.net"
 
@@ -35,7 +35,7 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 # 处理默认的配置文件
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY ${default_conf} /etc/nginx/conf.d/default.conf
+COPY ${DEFAULT_CONF} /etc/nginx/conf.d/default.conf
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 ENTRYPOINT [ "/usr/local/bin/docker-entrypoint" ]
