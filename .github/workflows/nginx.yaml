@@ -100,7 +100,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ env.image_name }}"
-          push: false
+          push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
             VERSION=${{ env.image_tag }}
