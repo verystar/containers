@@ -121,7 +121,7 @@ jobs:
                     "content": "GitHub Actions<font color=\"info\">构建成功</font>\n
                        >仓库名称:<font color=\"comment\">verystar/containers</font>
                        >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
+                       >App版本:<font color=\"comment\">${{ env.image_tag }}${{ matrix.suffix }}</font>
                        >报警信息:<font color=\"comment\">基础镜像构建成功</font>
                        >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
                   }
@@ -140,7 +140,7 @@ jobs:
                     "content": "GitHub Actions<font color=\"warning\">执行失败</font>，请注意!\n
                        >仓库名称:<font color=\"comment\">verystar/containers</font>
                        >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
+                       >App版本:<font color=\"comment\">${{ env.image_tag }}${{ matrix.suffix }}</font>
                        >报警信息:<font color=\"comment\">基础镜像构建失败</font>
                        >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
                   }
