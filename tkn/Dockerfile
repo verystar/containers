@@ -1,4 +1,4 @@
-FROM bitnami/kubectl:1.31
+FROM bitnami/kubectl:latest
 
 ARG VERSION
 LABEL maintainer="www.verystar.net"

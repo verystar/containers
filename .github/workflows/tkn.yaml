@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: tkn
-  IMAGE_LATEST_TAG: 0.39.0
+  IMAGE_LATEST_TAG: 0.43.0
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,8 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 0.39.0
+          - version: 0.43.0
+          # - version: 0.39.0
           # - version: 0.38.1
           # - version: 0.37.0
           # - version: 0.31.2
