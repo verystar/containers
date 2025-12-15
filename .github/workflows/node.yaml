@@ -19,6 +19,18 @@ jobs:
           echo "day_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d')" >> $GITHUB_ENV
           echo "detail_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
+      - uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Set up Git
+        run: |
+          git config user.name devops
+          git config user.email devops@verystar.cn
+          git fetch --tags
+          # curl -sSf https://sshx.io/get | sh
+          # sshx
+          bash -x scripts/tag.sh
+
       - name: Setup Node Version
         uses: actions/setup-node@v6
         with:
