@@ -2,63 +2,13 @@ name: NodeJS
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - "node/**"
-      - ".github/workflows/node.yaml"
     tags:
-      - "node-*"
+      - "node/*"
   workflow_dispatch:
-
-permissions:
-  packages: write
-
-env:
-  IMAGE_NAME: node
-  IMAGE_LATEST_TAG: 23.3.0
 
 jobs:
   build-and-push-image:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          # https://pnpm.io/installation#compatibility
-          - version: 25.2.1
-            pnpm: 10
-            cnpm: 9
-          - version: 24.11.1
-            pnpm: 10
-            cnpm: 9
-          - version: 23.11.1
-            pnpm: 10
-            cnpm: 9
-          - version: 22.21.1
-            pnpm: 10
-            cnpm: 9
-          - version: 21.7.3
-            pnpm: 10
-            cnpm: 9
-          - version: 20.19.6
-            pnpm: 10
-            cnpm: 9
-          - version: 19.9.0
-            pnpm: 8
-            cnpm: 9
-          - version: 18.20.8
-            pnpm: 8
-            cnpm: 9
-          - version: 16.20.2
-            pnpm: 8
-            cnpm: 9
-          - version: 14.21.3
-            pnpm: 7
-            cnpm: 7
-          - version: 12.22.12
-            pnpm: 6
-            cnpm: 7
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -78,12 +28,40 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
+          # image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
+          image_name=node
           image_tag=$(git describe --abbrev=0 --tags |awk -F '/' '{print $2}' |awk -F '-' '{print $1}')
           echo "image_tag=${image_tag}" >> $GITHUB_ENV
           echo "image_name=${image_name}" >> $GITHUB_ENV
           echo "version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
+
+      - name: Get PNPM Version
+        id: pnpm-version
+        run: |
+          # Get Node.js major version
+          node_major=$(semver --coerce ${image_tag} | awk -F '.' '{print $1}' | sed 's/v//')
+          echo "node_major=${node_major}" >> $GITHUB_ENV
+          # Determine pnpm version based on Node.js version
+          case ${node_major} in
+            12|13) pnpm_version=6 ;;
+            14|15) pnpm_version=7 ;;
+            16|17|18|19) pnpm_version=8 ;;
+            20|21|22|23|24|25) pnpm_version=10 ;;
+            *) pnpm_version=10 ;;
+          esac
+          echo "pnpm_version=${pnpm_version}" >> $GITHUB_ENV
+
+      - name: Get CNPM Version
+        id: cnpm-version
+        run: |
+          # Determine cnpm version based on Node.js version
+          case ${node_major} in
+            12|13|14|15) cnpm_version=7 ;;
+            16|18|19|20|21|22|23|24|25) cnpm_version=9 ;;
+            *) cnpm_version=9 ;;
+          esac
+          echo "cnpm_version=${cnpm_version}" >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
@@ -137,9 +115,9 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
-            VERSION=${{ matrix.version }}
-            PNPM=${{ matrix.pnpm }}
-            CNPM=${{ matrix.cnpm }}
+            VERSION=${{ env.image_tag }}
+            PNPM=${{ env.pnpm_version }}
+            CNPM=${{ env.cnpm_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
