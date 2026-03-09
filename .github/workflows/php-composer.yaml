@@ -47,7 +47,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push
-        uses: docker/bake-action@v6
+        uses: docker/bake-action@v7
         with:
           context: php
           files: build/php-composer.hcl
