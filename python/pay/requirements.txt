@@ -19,3 +19,5 @@ six==1.15.0
 tzdata==2025.3
 urllib3==2.6.3
 wheel==0.37.0
+uv==0.11.1
+duckdb==1.5.1

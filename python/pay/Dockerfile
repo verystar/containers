@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iputils-ping \
     curl \
     wget \
+    jq \
     # not found for python3.8 and python3.10
     # python-snappy \
     libsnappy-dev \
