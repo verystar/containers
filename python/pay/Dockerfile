@@ -13,14 +13,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     wget \
     jq \
+    ripgrep \
+    fd-find \
     # not found for python3.8 and python3.10
     # python-snappy \
     libsnappy-dev \
     zip \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && ln -sf /usr/bin/fdfind /usr/bin/fd \
     && echo "${TZ}" > /etc/timezone \
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
+
+# 安装 yq
+RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq \
+    && chmod +x /usr/bin/yq
 
 RUN pip install pipenv --no-cache-dir \
     && pip install --upgrade pip
