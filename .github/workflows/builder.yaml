@@ -55,6 +55,8 @@ jobs:
           echo "build_context=${build_context}" >> $GITHUB_ENV
           echo "version=$(semver --coerce ${version_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${version_tag} | wc -l)" >> $GITHUB_ENV
+          # base_version 用于 Dockerfile 中的 FROM 基础镜像版本
+          echo "base_version=${version_tag}" >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
@@ -108,7 +110,7 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
-            VERSION=${{ env.image_tag }}
+            VERSION=${{ env.base_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
