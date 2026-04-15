@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - "golang/*"
+      - "golang/pay-*"
       - "python/*"
       - "debian/*"
       - "golangci-lint/*"
@@ -31,12 +32,24 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          image_name=$(git describe --abbrev=0 --tags |awk -F '/' '{print $1}')
-          image_tag=$(git describe --abbrev=0 --tags |awk -F '/' '{print $2}' |awk -F '-' '{print $1}')
+          tag=$(git describe --abbrev=0 --tags)
+          # 特殊处理 golang/pay-* 格式，支持子目录构建
+          if [[ "$tag" == golang/pay-* ]]; then
+            image_name="golang"
+            image_tag=$(echo "$tag" | awk -F '/' '{print $2}')
+            build_context="golang/pay"
+          else
+            image_name=$(echo "$tag" | awk -F '/' '{print $1}')
+            image_tag=$(echo "$tag" | awk -F '/' '{print $2}' | awk -F '-' '{print $1}')
+            build_context="$image_name"
+          fi
           echo "image_tag=${image_tag}" >> $GITHUB_ENV
           echo "image_name=${image_name}" >> $GITHUB_ENV
-          echo "version=$(semver --coerce ${image_tag})" >> $GITHUB_ENV
-          echo "tag_length=$(grep -o '\.' <<< ${image_tag} | wc -l)" >> $GITHUB_ENV
+          echo "build_context=${build_context}" >> $GITHUB_ENV
+          # 提取版本号用于 semver 解析（去除 pay- 等前缀）
+          version_tag=$(echo "$image_tag" | sed 's/^pay-//')
+          echo "version=$(semver --coerce ${version_tag})" >> $GITHUB_ENV
+          echo "tag_length=$(grep -o '\.' <<< ${version_tag} | wc -l)" >> $GITHUB_ENV
 
       - name: Semver Parse
         uses: terradatum/semver-action@main
@@ -86,7 +99,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          context: "{{defaultContext}}:${{ env.image_name }}"
+          context: "{{defaultContext}}:${{ env.build_context }}"
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
