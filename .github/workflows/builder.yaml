@@ -4,7 +4,6 @@ on:
   push:
     tags:
       - "golang/*"
-      - "golang/pay-*"
       - "python/*"
       - "debian/*"
       - "golangci-lint/*"
@@ -32,22 +31,28 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          tag=$(git describe --abbrev=0 --tags)
-          # 特殊处理 golang/pay-* 格式，支持子目录构建
-          if [[ "$tag" == golang/pay-* ]]; then
-            image_name="golang"
-            image_tag=$(echo "$tag" | awk -F '/' '{print $2}')
-            build_context="golang/pay"
-          else
-            image_name=$(echo "$tag" | awk -F '/' '{print $1}')
-            image_tag=$(echo "$tag" | awk -F '/' '{print $2}' | awk -F '-' '{print $1}')
+          tag=$(git describe --abbrev-0 --tags)
+          image_name=$(echo "$tag" | awk -F '/' '{print $1}')
+          # 提取 tag 部分: golang/pay-1.26.2-20260415084007 -> pay-1.26.2-20260415084007
+          tag_part=$(echo "$tag" | awk -F '/' '{print $2}')
+          # 去掉时间戳后缀 (最后一个 - 后面的部分): pay-1.26.2-20260415084007 -> pay-1.26.2
+          full_tag=$(echo "$tag_part" | rev | cut -d'-' -f2- | rev)
+          # 检查第一部分是否是数字开头，判断是否为子目录模式
+          first_part=$(echo "$full_tag" | cut -d'-' -f1)
+          if [[ "$first_part" =~ ^[0-9] ]]; then
+            # 普通模式: 1.26.2 -> build_context=golang, image_tag=1.26.2
             build_context="$image_name"
+            image_tag="$full_tag"
+            version_tag="$full_tag"
+          else
+            # 子目录模式: pay-1.26.2 -> build_context=golang/pay, image_tag=1.26.2-pay
+            build_context="${image_name}/${first_part}"
+            version_tag=$(echo "$full_tag" | sed "s/^${first_part}-//")
+            image_tag="${version_tag}-${first_part}"
           fi
           echo "image_tag=${image_tag}" >> $GITHUB_ENV
           echo "image_name=${image_name}" >> $GITHUB_ENV
           echo "build_context=${build_context}" >> $GITHUB_ENV
-          # 提取版本号用于 semver 解析（去除 pay- 等前缀）
-          version_tag=$(echo "$image_tag" | sed 's/^pay-//')
           echo "version=$(semver --coerce ${version_tag})" >> $GITHUB_ENV
           echo "tag_length=$(grep -o '\.' <<< ${version_tag} | wc -l)" >> $GITHUB_ENV
 
