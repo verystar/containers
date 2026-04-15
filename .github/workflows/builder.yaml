@@ -31,7 +31,7 @@ jobs:
         id: get-version
         run: |
           npm install -g semver
-          tag=$(git describe --abbrev-0 --tags)
+          tag=$(git describe --abbrev=0 --tags)
           image_name=$(echo "$tag" | awk -F '/' '{print $1}')
           # 提取 tag 部分: golang/pay-1.26.2-20260415084007 -> pay-1.26.2-20260415084007
           tag_part=$(echo "$tag" | awk -F '/' '{print $2}')
