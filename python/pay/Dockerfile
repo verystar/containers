@@ -22,7 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && ln -sf /usr/bin/fdfind /usr/bin/fd \
     && echo "${TZ}" > /etc/timezone \
-    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装 yq
