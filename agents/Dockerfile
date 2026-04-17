@@ -6,6 +6,7 @@ ARG requirements_file
 
 LABEL maintainer="www.verystar.net"
 ENV TZ=Asia/Shanghai
+ENV NODE_PATH=/usr/local/lib/node_modules
 
 # 系统依赖安装
 RUN apt-get update && apt-get install -y --no-install-recommends \
