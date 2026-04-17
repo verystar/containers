@@ -8,18 +8,106 @@ on:
       - "debian/*"
       - "golangci-lint/*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "指定构建的 tag（如 python/3.10.20-20260417）"
+        required: true
+        default: "python/3.10.20-20260417"
 
 jobs:
-  build-and-push-image:
+  discover:
     runs-on: ubuntu-latest
+    outputs:
+      targets: ${{ steps.scan.outputs.targets }}
+      image_name: ${{ steps.scan.outputs.image_name }}
+      version: ${{ steps.scan.outputs.version }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Get current date
-        id: current_date
+      - name: Scan targets
+        id: scan
         run: |
-          echo "day_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d')" >> $GITHUB_ENV
+          # 根据触发方式获取 tag
+          # push tag: 使用 github.ref_name
+          # workflow_dispatch: 使用输入的 tag
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            tag="${{ github.event.inputs.tag }}"
+          else
+            tag="${{ github.ref_name }}"
+          fi
+
+          # 提取镜像名称和版本号
+          image_name=$(echo "$tag" | awk -F '/' '{print $1}')
+          version=$(echo "$tag" | awk -F '/' '{print $2}' | rev | cut -d'-' -f2- | rev)
+
+          # 构建 targets 数组：根目录 + 所有子目录
+          targets="[]"
+
+          # 检查根目录是否有 Dockerfile
+          if [ -f "$image_name/Dockerfile" ]; then
+            targets=$(echo "$targets" | jq -c '. + ["root"]')
+          fi
+
+          # 扫描子目录
+          for dir in $(find "$image_name" -maxdepth 1 -type d ! -path "$image_name"); do
+            if [ -f "$dir/Dockerfile" ]; then
+              subdir=$(basename "$dir")
+              targets=$(echo "$targets" | jq -c '. + ["'$subdir'"]')
+            fi
+          done
+
+          echo "targets=${targets}" >> $GITHUB_OUTPUT
+          echo "image_name=${image_name}" >> $GITHUB_OUTPUT
+          echo "version=${version}" >> $GITHUB_OUTPUT
+
+          # 调试输出
+          echo "Targets: ${targets}"
+          echo "Image name: ${image_name}"
+          echo "Version: ${version}"
+
+  build-and-push-image:
+    needs: discover
+    strategy:
+      matrix:
+        target: ${{ fromJson(needs.discover.outputs.targets) }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Parse target
+        run: |
+          target="${{ matrix.target }}"
+          image_name="${{ needs.discover.outputs.image_name }}"
+          version="${{ needs.discover.outputs.version }}"
+
+          if [ "$target" == "root" ]; then
+            # 根目录：无后缀
+            build_context="$image_name"
+            image_tag="$version"
+            suffix=""
+          else
+            # 子目录：带后缀
+            build_context="${image_name}/${target}"
+            image_tag="${version}-${target}"
+            suffix="-${target}"
+          fi
+
+          echo "build_context=${build_context}" >> $GITHUB_ENV
+          echo "image_tag=${image_tag}" >> $GITHUB_ENV
+          echo "suffix=${suffix}" >> $GITHUB_ENV
+          echo "version=${version}" >> $GITHUB_ENV
+
+          # 调试输出
+          echo "Target: ${target}"
+          echo "Build context: ${build_context}"
+          echo "Image tag: ${image_tag}"
+
+      - name: Get current date
+        run: |
           echo "detail_time=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
       - name: Setup Node Version
@@ -27,55 +115,25 @@ jobs:
         with:
           node-version: 18.x
 
-      - name: Get Semver Version
-        id: get-version
+      - name: Get Semver
         run: |
           npm install -g semver
-          tag=$(git describe --abbrev=0 --tags)
-          image_name=$(echo "$tag" | awk -F '/' '{print $1}')
-          # 提取 tag 部分: golang/pay-1.26.2-20260415084007 -> pay-1.26.2-20260415084007
-          tag_part=$(echo "$tag" | awk -F '/' '{print $2}')
-          # 去掉时间戳后缀 (最后一个 - 后面的部分): pay-1.26.2-20260415084007 -> pay-1.26.2
-          full_tag=$(echo "$tag_part" | rev | cut -d'-' -f2- | rev)
-          # 检查第一部分是否是数字开头，判断是否为子目录模式
-          first_part=$(echo "$full_tag" | cut -d'-' -f1)
-          if [[ "$first_part" =~ ^[0-9] ]]; then
-            # 普通模式: 1.26.2 -> build_context=golang, image_tag=1.26.2
-            build_context="$image_name"
-            image_tag="$full_tag"
-            version_tag="$full_tag"
-          else
-            # 子目录模式: pay-1.26.2 -> build_context=golang/pay, image_tag=1.26.2-pay
-            build_context="${image_name}/${first_part}"
-            version_tag=$(echo "$full_tag" | sed "s/^${first_part}-//")
-            image_tag="${version_tag}-${first_part}"
-          fi
-          echo "image_tag=${image_tag}" >> $GITHUB_ENV
-          echo "image_name=${image_name}" >> $GITHUB_ENV
-          echo "build_context=${build_context}" >> $GITHUB_ENV
-          echo "version=$(semver --coerce ${version_tag})" >> $GITHUB_ENV
-          echo "tag_length=$(grep -o '\.' <<< ${version_tag} | wc -l)" >> $GITHUB_ENV
-          # base_version 用于 Dockerfile 中的 FROM 基础镜像版本
-          echo "base_version=${version_tag}" >> $GITHUB_ENV
-
-      - name: Semver Parse
-        uses: terradatum/semver-action@main
-        id: semver
-        with:
-          version: ${{ env.version }}
+          echo "major=$(semver --coerce ${{ env.version }} | cut -d'.' -f1)" >> $GITHUB_ENV
+          echo "minor=$(semver --coerce ${{ env.version }} | cut -d'.' -f2)" >> $GITHUB_ENV
+          echo "tag_length=$(grep -o '\.' <<< ${version} | wc -l)" >> $GITHUB_ENV
 
       - name: Docker Metadata
         id: meta
         uses: docker/metadata-action@v6
         with:
           images: |
-            ghcr.io/${{ github.repository }}/${{ env.image_name }}
-            verystar/${{ env.image_name }}
-            registry.verystar.net/library/${{ env.image_name }}
+            # ghcr.io/${{ github.repository }}/${{ needs.discover.outputs.image_name }}
+            # verystar/${{ needs.discover.outputs.image_name }}
+            registry.verystar.net/library/${{ needs.discover.outputs.image_name }}
           tags: |
             type=raw,value=${{ env.image_tag }}
-            type=raw,value=${{ steps.semver.outputs.major }}.${{ steps.semver.outputs.minor }}
-            type=raw,value=${{ steps.semver.outputs.major }},enable=${{ env.tag_length == 1 }}
+            type=raw,value=${{ env.major }}.${{ env.minor }}${{ env.suffix }}
+            type=raw,value=${{ env.major }}${{ env.suffix }},enable=${{ env.tag_length == 1 }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
@@ -83,18 +141,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v4
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Login to DockerHub Container Registry
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - name: Login to DockerHub Container Registry
+      #   uses: docker/login-action@v4
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Login to ACR Container Registry
         uses: docker/login-action@v4
@@ -110,44 +168,40 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           build-args: |
-            VERSION=${{ env.base_version }}
+            VERSION=${{ needs.discover.outputs.version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # 成功通知
-      - name: Failure Notify
+      - name: Success Notify
         if: ${{ success() }}
         run: |
           curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ vars.WECOM_TOKEN }}' \
             -H 'Content-Type: application/json' \
-            -d '
-              {
-                  "msgtype": "markdown",
-                  "markdown": {
-                    "content": "GitHub Actions<font color=\"info\">构建成功</font>\n
-                       >仓库名称:<font color=\"comment\">verystar/containers</font>
-                       >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
-                       >报警信息:<font color=\"comment\">基础镜像构建成功</font>
-                       >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
-                  }
-              }'
+            -d '{
+              "msgtype": "markdown",
+              "markdown": {
+                "content": "GitHub Actions<font color=\"info\">构建成功</font>\n
+                   >仓库名称:<font color=\"comment\">verystar/containers</font>
+                   >App名称:<font color=\"comment\">${{ needs.discover.outputs.image_name }}</font>
+                   >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
+                   >构建目录:<font color=\"comment\">${{ env.build_context }}</font>
+                   >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
+              }
+            }'
 
-      # 失败通知
       - name: Failure Notify
         if: ${{ failure() }}
         run: |
           curl 'https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${{ vars.WECOM_TOKEN }}' \
             -H 'Content-Type: application/json' \
-            -d '
-              {
-                  "msgtype": "markdown",
-                  "markdown": {
-                    "content": "GitHub Actions<font color=\"warning\">执行失败</font>，请注意!\n
-                       >仓库名称:<font color=\"comment\">verystar/containers</font>
-                       >App名称:<font color=\"comment\">${{ env.image_name }}</font>
-                       >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
-                       >报警信息:<font color=\"comment\">基础镜像构建失败</font>
-                       >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
-                  }
-              }'
+            -d '{
+              "msgtype": "markdown",
+              "markdown": {
+                "content": "GitHub Actions<font color=\"warning\">执行失败</font>\n
+                   >仓库名称:<font color=\"comment\">verystar/containers</font>
+                   >App名称:<font color=\"comment\">${{ needs.discover.outputs.image_name }}</font>
+                   >App版本:<font color=\"comment\">${{ env.image_tag }}</font>
+                   >构建目录:<font color=\"comment\">${{ env.build_context }}</font>
+                   >构建时间:<font color=\"comment\">${{ env.detail_time }}</font>"
+              }
+            }'

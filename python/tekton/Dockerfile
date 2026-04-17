@@ -1,6 +1,6 @@
-ARG python_version
+ARG VERSION
 
-FROM python:${python_version}
+FROM python:${VERSION}
 
 LABEL maintainer="www.verystar.net"
 ENV TZ Asia/Shanghai
