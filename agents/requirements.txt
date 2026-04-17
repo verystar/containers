@@ -31,3 +31,4 @@ pillow==12.2.0
 pycparser==3.0
 pypdf==6.10.2
 pypdfium2==5.7.0
+markdownify==1.2.2

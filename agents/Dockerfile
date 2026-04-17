@@ -6,6 +6,7 @@ FROM python:${python_version}
 LABEL maintainer="www.verystar.net"
 ENV TZ Asia/Shanghai
 
+# System
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     procps \
@@ -19,15 +20,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # python-snappy \
     libsnappy-dev \
     zip \
+    libreoffice \
+    poppler-utils \
+    python3-docx \
+    nodejs \
+    npm \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && ln -sf /usr/bin/fdfind /usr/bin/fd \
     && echo "${TZ}" > /etc/timezone \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 yq
+# YAML
 RUN wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq \
     && chmod +x /usr/bin/yq
 
+# Node
+RUN npm install -g pptxgenjs typescript
+
+# Python
 RUN pip install pipenv --no-cache-dir \
     && pip install --upgrade pip
 
