@@ -5,6 +5,11 @@ on:
     tags:
       - "node/*"
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "指定构建的 tag（如 node/24.15.0-20260417）"
+        required: true
+        default: "node/24.15.0-20260417"
 
 jobs:
   build-and-push-image:
