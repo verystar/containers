@@ -6,6 +6,7 @@ on:
       - "golang/*"
       - "python/*"
       - "debian/*"
+      - "nginx/*"
       - "golangci-lint/*"
   workflow_dispatch:
     inputs:
