@@ -47,10 +47,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Checkou Nexus Repository Composer
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: sonatype-nexus-community/nexus-repository-composer
           ref: composer-parent-${{ env.NEXUS_REPOSITORY_COMPOSER_VERSION }}
