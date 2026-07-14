@@ -14,7 +14,7 @@ permissions:
 
 env:
   IMAGE_NAME: aliyun-cli
-  IMAGE_LATEST_TAG: 3.0.253
+  IMAGE_LATEST_TAG: 3.4.6
 
 jobs:
   build-and-push-image:
@@ -23,7 +23,7 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 3.0.253
+          - version: 3.4.6
     steps:
       - name: Checkout
         uses: actions/checkout@v7
