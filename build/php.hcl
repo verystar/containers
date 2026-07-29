@@ -4,6 +4,7 @@ variable "CURRENT_TIME" {
 
 target "common" {
   dockerfile = "Dockerfile"
+  platforms = ["linux/amd64", "linux/arm64"]
 }
 
 function "tag" {
@@ -17,7 +18,6 @@ function "tag" {
 target "php7-1" {
   context = "php/7.1-fpm"
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   args = {
     php_version = "7.1.33-fpm"
     redis_version = "4.2.0"
@@ -35,7 +35,6 @@ target "php7-1" {
 target "php7-3" {
   context = "php/7.3-fpm"
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   args = {
     php_version = "7.3.33-fpm"
     redis_version = "5.3.7"
@@ -53,7 +52,6 @@ target "php7-3" {
 target "php7-4" {
   context = "php/7.4-fpm"
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   args = {
     php_version = "7.4.33"
     redis_version = "5.3.7"
@@ -71,7 +69,6 @@ target "php7-4" {
 target "php8-2" {
   context = "php/8.2-fpm"
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   args = {
     php_version = "8.2.22-fpm"
     redis_version = "6.0.2"

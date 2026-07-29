@@ -4,6 +4,7 @@ variable "CURRENT_TIME" {
 
 target "common" {
   dockerfile = "Dockerfile"
+  platforms = ["linux/amd64", "linux/arm64"]
 }
 
 function "tag" {
@@ -16,7 +17,6 @@ function "tag" {
 
 target "php71-composer1" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   context = "php/7.1-composer"
   args = {
     php_version = "7.1.33-fpm"
@@ -27,7 +27,6 @@ target "php71-composer1" {
 
 target "php71-composer2" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   context = "php/7.1-composer"
   args = {
     php_version = "7.1.33"
@@ -38,7 +37,6 @@ target "php71-composer2" {
 
 target "php73-composer1" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   context = "php/7.3-composer"
   args = {
     php_version = "7.3.33"
@@ -49,7 +47,6 @@ target "php73-composer1" {
 
 target "php73-composer2" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   context = "php/7.3-composer"
   args = {
     php_version = "7.3.33"
@@ -60,7 +57,6 @@ target "php73-composer2" {
 
 target "php82-composer2" {
   inherits = ["common"]
-  platforms = ["linux/amd64"]
   context = "php/8.2-composer"
   args = {
     php_version = "8.2.22"
