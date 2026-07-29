@@ -21,7 +21,7 @@ ENV SESSION_SAVE_PATH="tcp://r-bp12479e0cae1bb4.redis.rds.aliyuncs.com:6379"
 RUN echo "redis version: ${redis_version}" \
     && echo "yaf version: ${yaf_version}" \
     && echo "libssh2 version: ${libssh2_version}" \
-    && echo "ssh2 version: ${ssh2_version}" \
+    && echo "ssh2 version: ${ssh2_version}"
 
 COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
