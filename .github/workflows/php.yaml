@@ -8,6 +8,17 @@ on:
   #     - "php/**"
   #     - ".github/workflows/php.yaml"
   workflow_dispatch:
+    inputs:
+      target:
+        description: "选择要构建的目标"
+        type: choice
+        default: all
+        options:
+          - all
+          - php7-1
+          - php7-3
+          - php7-4
+          - php8-2
 
 permissions:
   packages: write
@@ -46,14 +57,27 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
+      - name: Resolve targets
+        id: resolve
+        run: |
+          sel="${{ github.event.inputs.target }}"
+          if [ "$sel" = "all" ]; then
+            {
+              echo "list<<EOF"
+              echo "php7-1"
+              echo "php7-3"
+              echo "php7-4"
+              echo "php8-2"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "list=$sel" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push
         uses: docker/bake-action@v7
         with:
           context: php
           files: build/php.hcl
           push: true
-          targets: |
-            php7-1
-            php7-3
-            php7-4
-            php8-2
+          targets: ${{ steps.resolve.outputs.list }}

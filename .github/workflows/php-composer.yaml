@@ -8,6 +8,18 @@ on:
   #     - "php/**"
   #     - ".github/workflows/php-composer.yaml"
   workflow_dispatch:
+    inputs:
+      target:
+        description: "选择要构建的目标"
+        type: choice
+        default: all
+        options:
+          - all
+          - php71-composer1
+          - php71-composer2
+          - php73-composer1
+          - php73-composer2
+          - php82-composer2
 
 permissions:
   packages: write
@@ -46,15 +58,28 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
+      - name: Resolve targets
+        id: resolve
+        run: |
+          sel="${{ github.event.inputs.target }}"
+          if [ "$sel" = "all" ]; then
+            {
+              echo "list<<EOF"
+              echo "php71-composer1"
+              echo "php71-composer2"
+              echo "php73-composer1"
+              echo "php73-composer2"
+              echo "php82-composer2"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          else
+            echo "list=$sel" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Build and push
         uses: docker/bake-action@v7
         with:
           context: php
           files: build/php-composer.hcl
           push: true
-          targets: |
-            php71-composer1
-            php71-composer2
-            php73-composer1
-            php73-composer2
-            php82-composer2
+          targets: ${{ steps.resolve.outputs.list }}
