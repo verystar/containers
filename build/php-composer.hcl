@@ -55,6 +55,16 @@ target "php73-composer2" {
   tags = tag("${target.php73-composer2.args.php_version}", "${target.php73-composer2.args.composer_version}")
 }
 
+target "php74-composer2" {
+  inherits = ["common"]
+  context = "php/7.4-composer"
+  args = {
+    php_version = "7.4.33"
+    composer_version = "2.2.0"
+  }
+  tags = tag("${target.php74-composer2.args.php_version}", "${target.php74-composer2.args.composer_version}")
+}
+
 target "php82-composer2" {
   inherits = ["common"]
   context = "php/8.2-composer"

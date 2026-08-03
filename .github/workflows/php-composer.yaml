@@ -19,6 +19,7 @@ on:
           - php71-composer2
           - php73-composer1
           - php73-composer2
+          - php74-composer2
           - php82-composer2
 
 permissions:
@@ -69,6 +70,7 @@ jobs:
               echo "php71-composer2"
               echo "php73-composer1"
               echo "php73-composer2"
+              echo "php74-composer2"
               echo "php82-composer2"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
