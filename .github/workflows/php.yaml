@@ -16,6 +16,7 @@ on:
         options:
           - all
           - php7-1
+          - php7-2
           - php7-3
           - php7-4
           - php8-2
@@ -65,6 +66,7 @@ jobs:
             {
               echo "list<<EOF"
               echo "php7-1"
+              echo "php7-2"
               echo "php7-3"
               echo "php7-4"
               echo "php8-2"

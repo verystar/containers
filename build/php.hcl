@@ -31,6 +31,22 @@ target "php7-1" {
   )
 }
 
+target "php7-2" {
+  context = "php/7.2-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "7.2.34-fpm"
+    redis_version = "4.2.0"
+    yaf_version = "3.0.7"
+    mcrypt_version = "1.0.1"
+    libssh2_version = "1.9.0"
+    ssh2_version = "1.2"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:7.2-fpm"],
+    tag("${target.php7-2.args.php_version}"),
+  )
+}
 
 target "php7-3" {
   context = "php/7.3-fpm"
