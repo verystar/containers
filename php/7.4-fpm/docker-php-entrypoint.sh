@@ -13,17 +13,6 @@ else
     sed -i "s|UPLOAD_MAX_FILESIZE|2m|g" /usr/local/etc/php-fpm.d/zz-docker.conf
 fi
 
-# 替换环境变量
-# starbucks 不知道有没有指定 app_env
-if [ -n "${APP_ENV}" ]; then
-    if [ -e /usr/share/nginx/html/public/index.php ]; then
-        sed -i "s|define('ENVIRONMENT', 'develop');|define('ENVIRONMENT', '${APP_ENV}');|g" /usr/share/nginx/html/public/index.php
-    fi
-    if [ -e /usr/share/nginx/html/artisan ]; then
-        sed -i "s|define('ENVIRONMENT', 'develop');|define('ENVIRONMENT', '${APP_ENV}');|g" /usr/share/nginx/html/artisan
-    fi
-fi
-
 # 设置PHP执行时间
 if [ -n "${MAX_EXECUTION_TIME}" ]; then
     sed -i "s|MAX_EXECUTION_TIME|${MAX_EXECUTION_TIME}|g" /usr/local/etc/php/php.ini

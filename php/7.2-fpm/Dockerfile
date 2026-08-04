@@ -1,15 +1,15 @@
 ARG php_version
+ARG mcrypt_version
 ARG redis_version
 ARG yaf_version
-ARG mcrypt_version
 ARG libssh2_version
 ARG ssh2_version
 
 FROM php:${php_version:-"7.2-fpm"}
 
+ARG mcrypt_version
 ARG redis_version
 ARG yaf_version
-ARG mcrypt_version
 ARG libssh2_version
 ARG ssh2_version
 

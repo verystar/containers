@@ -7,15 +7,15 @@ ARG ssh2_version
 
 FROM php:${php_version:-"7.4-fpm"}
 
-LABEL org.opencontainers.image.authors="www.verystar.net"
-
 ARG mcrypt_version
 ARG redis_version
 ARG yaf_version
 ARG libssh2_version
 ARG ssh2_version
 
-# # ENV REQUEST_TIMEOUT 10
+LABEL org.opencontainers.image.authors="www.verystar.net"
+
+# ENV REQUEST_TIMEOUT 10
 ENV TZ=Asia/Shanghai
 ENV SESSION_SAVE_PATH="tcp://r-bp12479e0cae1bb4.redis.rds.aliyuncs.com:6379"
 
@@ -29,7 +29,6 @@ RUN echo "redis version: ${redis_version}" \
 # 默认使用基础镜像自带的官方源(deb.debian.org)；需要换源时取消下面注释
 # COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # 必须软件
     autoconf \
     libaio-dev \
     git \
