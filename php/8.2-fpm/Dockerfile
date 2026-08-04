@@ -136,9 +136,6 @@ RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf 
     # 设置PHP最大执行时间
     && echo "max_execution_time = MAX_EXECUTION_TIME" >> /usr/local/etc/php/php.ini
 
-# 修改 LDAP TLS 问题
-RUN mkdir /etc/ldap && echo "TLS_REQUEST never" >> /etc/ldap/ldap.con
-
 COPY docker-php-entrypoint.sh /docker-php-entrypoint
 ENTRYPOINT [ "/docker-php-entrypoint" ]
 CMD [ "php-fpm" ]

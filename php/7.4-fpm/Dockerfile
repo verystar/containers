@@ -26,23 +26,9 @@ RUN echo "redis version: ${redis_version}" \
     && echo "libssh2 version: ${libssh2_version}" \
     && echo "ssh2 version: ${ssh2_version}"
 
-COPY sources.list /etc/apt/sources.list
+# 默认使用基础镜像自带的官方源(deb.debian.org)；需要换源时取消下面注释
+# COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    # 修复漏洞
-    curl \
-    openssl \
-    gzip \
-    libtasn1-6 \
-    libgssapi-krb5-2 \
-    libkrb5-3 \
-    libkrb5support0 \
-    libgnutls30 \
-    libk5crypto3 \
-    libsystemd0 \
-    libudev1 \
-    ncurses-base \
-    ncurses-bin \
-    libtinfo6 \
     # 必须软件
     autoconf \
     libaio-dev \
@@ -57,6 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libxslt1-dev \
     libmcrypt-dev \
+    libevent-dev \
     && rm -r /var/lib/apt/lists/* \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
@@ -65,7 +52,7 @@ RUN docker-php-ext-install bcmath zip pdo_mysql mysqli opcache xsl gettext pcntl
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     # Install Ldap extension
-    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ \
+    && docker-php-ext-configure ldap --with-libdir=lib/$(uname -m)-linux-gnu/ \
     && docker-php-ext-install ldap
 
 # Install Redis extension
@@ -115,6 +102,15 @@ RUN curl -fsSL https://pecl.php.net/get/ssh2-${ssh2_version}.tgz -o ssh2-${ssh2_
     && docker-php-ext-install /tmp/ssh2 \
     && rm -rf /tmp/ssh2
 
+# Install nsq extension
+RUN curl -fsSL https://pecl.php.net/get/nsq-3.5.1.tgz -o nsq-3.5.1.tgz \
+    && mkdir -p /tmp/nsq \
+    && tar xf nsq-3.5.1.tgz -C /tmp/nsq --strip-components=1 \
+    && rm -f nsq-3.5.1.tgz \
+    && docker-php-ext-configure /tmp/nsq --with-libevent-path=/usr \
+    && docker-php-ext-install /tmp/nsq \
+    && rm -rf /tmp/nsq
+
 RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf \
     && echo "request_slowlog_timeout = 3" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && echo "slowlog = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
@@ -128,17 +124,17 @@ RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf 
     && echo "php_admin_value[memory_limit] = 128M" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && echo "php_admin_value[error_log] = /proc/self/fd/2" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && echo "php_admin_value[date.timezone] = ${TZ}" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
-    # && echo "php_value[session.save_handler] = redis" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
+    && echo "php_value[session.save_handler] = redis" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     # 设置上传文件大小
     && echo "php_admin_value[post_max_size] = UPLOAD_MAX_FILESIZE" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && echo "php_admin_value[upload_max_filesize] = UPLOAD_MAX_FILESIZE" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
     && echo "date.timezone = ${TZ}" >> /usr/local/etc/php/php.ini \
     && echo "expose_php = Off" >> /usr/local/etc/php/php.ini \
-    && echo "display_errors = On" >> /usr/local/etc/php/php.ini \
+    && echo "display_errors = Off" >> /usr/local/etc/php/php.ini \
     && echo "log_errors = On" >> /usr/local/etc/php/php.ini \
     && echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT" >> /usr/local/etc/php/php.ini \
     && echo "error_log = /proc/self/fd/2" >> /usr/local/etc/php/php.ini \
-    # && echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini \
+    && echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini \
     # 设置PHP最大执行时间
     && echo "max_execution_time = MAX_EXECUTION_TIME" >> /usr/local/etc/php/php.ini
 

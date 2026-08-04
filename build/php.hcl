@@ -69,7 +69,7 @@ target "php7-4" {
   context = "php/7.4-fpm"
   inherits = ["common"]
   args = {
-    php_version = "7.4.33"
+    php_version = "7.4.33-fpm"
     redis_version = "5.3.7"
     yaf_version = "3.3.5"
     mcrypt_version = "1.0.6"

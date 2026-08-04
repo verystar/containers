@@ -26,7 +26,8 @@ RUN echo "redis version: ${redis_version}" \
     && echo "libssh2 version: ${libssh2_version}" \
     && echo "ssh2 version: ${ssh2_version}"
 
-COPY sources.list /etc/apt/sources.list
+# 默认使用基础镜像自带的官方源(deb.debian.org)；需要换源时取消下面注释
+# COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
     autoconf \
     libaio-dev \
@@ -102,12 +103,12 @@ RUN curl -fsSL https://pecl.php.net/get/ssh2-${ssh2_version}.tgz -o ssh2-${ssh2_
 
 # Install nsq extension
 RUN curl -fsSL https://pecl.php.net/get/nsq-3.5.1.tgz -o nsq-3.5.1.tgz \
-&& mkdir -p /tmp/nsq \
-&& tar xf nsq-3.5.1.tgz -C /tmp/nsq --strip-components=1 \
-&& rm -f nsq-3.5.1.tgz \
-&& docker-php-ext-configure /tmp/nsq --with-libevent-path=/usr \
-&& docker-php-ext-install /tmp/nsq \
-&& rm -rf /tmp/nsq
+    && mkdir -p /tmp/nsq \
+    && tar xf nsq-3.5.1.tgz -C /tmp/nsq --strip-components=1 \
+    && rm -f nsq-3.5.1.tgz \
+    && docker-php-ext-configure /tmp/nsq --with-libevent-path=/usr \
+    && docker-php-ext-install /tmp/nsq \
+    && rm -rf /tmp/nsq
 
 RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf \
     && echo "request_slowlog_timeout = 3" >> /usr/local/etc/php-fpm.d/zz-docker.conf \
@@ -135,9 +136,6 @@ RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf 
     && echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini \
     # 设置PHP最大执行时间
     && echo "max_execution_time = MAX_EXECUTION_TIME" >> /usr/local/etc/php/php.ini
-
-# 修改 LDAP TLS 问题
-RUN mkdir /etc/ldap && echo "TLS_REQUEST never" >> /etc/ldap/ldap.con
 
 COPY docker-php-entrypoint.sh /docker-php-entrypoint
 ENTRYPOINT [ "/docker-php-entrypoint" ]
