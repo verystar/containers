@@ -3,7 +3,7 @@ set -e
 
 if [ ! -z "${SESSION_SAVE_PATH}" ]; then
     echo "php_value[session.save_path] = \"${SESSION_SAVE_PATH}\"" >> /usr/local/etc/php-fpm.d/zz-docker.conf
-    echo "session.save_handler = \"${SESSION_SAVE_PATH}\"" >> /usr/local/etc/php/php.ini
+    echo "session.save_path = \"${SESSION_SAVE_PATH}\"" >> /usr/local/etc/php/php.ini
 fi
 
 # 设置上传文件大小
