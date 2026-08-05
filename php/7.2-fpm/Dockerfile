@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     libssl-dev \
+    libzip-dev \
     libldap2-dev \
     libfreetype6-dev \
     libjpeg-dev \
