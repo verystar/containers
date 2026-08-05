@@ -49,7 +49,7 @@ target "php73-composer1" {
   inherits = ["common"]
   context = "php/7.3-composer"
   args = {
-    php_version = "7.3.33"
+    php_version = "7.3.33-fpm"
     composer_version = "1.9.1"
   }
   tags = tag("${target.php73-composer1.args.php_version}", "${target.php73-composer1.args.composer_version}")
@@ -59,7 +59,7 @@ target "php73-composer2" {
   inherits = ["common"]
   context = "php/7.3-composer"
   args = {
-    php_version = "7.3.33"
+    php_version = "7.3.33-fpm"
     composer_version = "2.2.0"
   }
   tags = tag("${target.php73-composer2.args.php_version}", "${target.php73-composer2.args.composer_version}")
@@ -69,7 +69,7 @@ target "php74-composer2" {
   inherits = ["common"]
   context = "php/7.4-composer"
   args = {
-    php_version = "7.4.33"
+    php_version = "7.4.33-fpm"
     composer_version = "2.2.0"
   }
   tags = tag("${target.php74-composer2.args.php_version}", "${target.php74-composer2.args.composer_version}")
@@ -79,7 +79,7 @@ target "php82-composer2" {
   inherits = ["common"]
   context = "php/8.2-composer"
   args = {
-    php_version = "8.2.22"
+    php_version = "8.2.22-fpm"
     composer_version = "2.8.5"
   }
   tags = tag("${target.php82-composer2.args.php_version}", "${target.php82-composer2.args.composer_version}")
