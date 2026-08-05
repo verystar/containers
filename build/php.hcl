@@ -24,6 +24,7 @@ target "php7-1" {
     yaf_version = "3.0.7"
     libssh2_version = "1.9.0"
     ssh2_version = "1.2"
+    nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:7.1-fpm"],
@@ -41,6 +42,7 @@ target "php7-2" {
     mcrypt_version = "1.0.1"
     libssh2_version = "1.9.0"
     ssh2_version = "1.2"
+    nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:7.2-fpm"],
@@ -58,6 +60,7 @@ target "php7-3" {
     mcrypt_version = "1.0.5"
     libssh2_version = "1.10.0"
     ssh2_version = "1.3.1"
+    nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:7.3-fpm"],
@@ -75,6 +78,7 @@ target "php7-4" {
     mcrypt_version = "1.0.6"
     libssh2_version = "1.11.0"
     ssh2_version = "1.4"
+    nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:7.4-fpm"],
@@ -92,6 +96,7 @@ target "php8-2" {
     mcrypt_version = "1.0.5"
     libssh2_version = "1.11.0"
     ssh2_version = "1.4.1"
+    nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:8.2-fpm"],

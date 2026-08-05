@@ -3,6 +3,7 @@ ARG redis_version
 ARG yaf_version
 ARG libssh2_version
 ARG ssh2_version
+ARG nsq_version
 
 FROM php:${php_version:-"7.1-fpm"}
 
@@ -10,6 +11,7 @@ ARG redis_version
 ARG yaf_version
 ARG libssh2_version
 ARG ssh2_version
+ARG nsq_version
 
 LABEL org.opencontainers.image.authors="www.verystar.net"
 
@@ -21,7 +23,8 @@ ENV SESSION_SAVE_PATH="tcp://r-bp12479e0cae1bb4.redis.rds.aliyuncs.com:6379"
 RUN echo "redis version: ${redis_version}" \
     && echo "yaf version: ${yaf_version}" \
     && echo "libssh2 version: ${libssh2_version}" \
-    && echo "ssh2 version: ${ssh2_version}"
+    && echo "ssh2 version: ${ssh2_version}" \
+    && echo "nsq version: ${nsq_version}"
 
 COPY sources.list /etc/apt/sources.list
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -89,10 +92,10 @@ RUN curl -fsSL https://pecl.php.net/get/ssh2-${ssh2_version}.tgz -o ssh2-${ssh2_
     && rm -rf /tmp/ssh2
 
 # Install nsq extension
-RUN curl -fsSL https://pecl.php.net/get/nsq-3.5.1.tgz -o nsq-3.5.1.tgz \
+RUN curl -fsSL https://pecl.php.net/get/nsq-${nsq_version}.tgz -o nsq-${nsq_version}.tgz \
     && mkdir -p /tmp/nsq \
-    && tar xf nsq-3.5.1.tgz -C /tmp/nsq --strip-components=1 \
-    && rm -f nsq-3.5.1.tgz \
+    && tar xf nsq-${nsq_version}.tgz -C /tmp/nsq --strip-components=1 \
+    && rm -f nsq-${nsq_version}.tgz \
     && docker-php-ext-configure /tmp/nsq --with-libevent-path=/usr \
     && docker-php-ext-install /tmp/nsq \
     && rm -rf /tmp/nsq
