@@ -90,16 +90,106 @@ target "php8-2" {
   context = "php/8.2-fpm"
   inherits = ["common"]
   args = {
-    php_version = "8.2.22-fpm"
-    redis_version = "6.0.2"
-    yaf_version = "3.3.6"
-    mcrypt_version = "1.0.5"
-    libssh2_version = "1.11.0"
-    ssh2_version = "1.4.1"
+    php_version = "8.2.33-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
     nsq_version = "3.5.1"
   }
   tags = concat(
     ["registry.verystar.net/library/php:8.2-fpm"],
     tag("${target.php8-2.args.php_version}"),
+  )
+}
+
+target "php8-0" {
+  context = "php/8.0-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.0.30-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
+    nsq_version = "3.5.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.0-fpm"],
+    tag("${target.php8-0.args.php_version}"),
+  )
+}
+
+target "php8-1" {
+  context = "php/8.1-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.1.34-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
+    nsq_version = "3.5.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.1-fpm"],
+    tag("${target.php8-1.args.php_version}"),
+  )
+}
+
+target "php8-3" {
+  context = "php/8.3-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.3.33-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
+    nsq_version = "3.5.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.3-fpm"],
+    tag("${target.php8-3.args.php_version}"),
+  )
+}
+
+target "php8-4" {
+  context = "php/8.4-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.4.24-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
+    nsq_version = "3.5.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.4-fpm"],
+    tag("${target.php8-4.args.php_version}"),
+  )
+}
+
+target "php8-5" {
+  context = "php/8.5-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.5.9-fpm"
+    redis_version = "6.3.0"
+    yaf_version = "3.3.7"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.5.0"
+    nsq_version = "3.5.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.5-fpm"],
+    tag("${target.php8-5.args.php_version}"),
   )
 }

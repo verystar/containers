@@ -19,7 +19,12 @@ on:
           - php7-2
           - php7-3
           - php7-4
+          - php8-0
+          - php8-1
           - php8-2
+          - php8-3
+          - php8-4
+          - php8-5
 
 permissions:
   packages: write
@@ -69,7 +74,12 @@ jobs:
               echo "php7-2"
               echo "php7-3"
               echo "php7-4"
+              echo "php8-0"
+              echo "php8-1"
               echo "php8-2"
+              echo "php8-3"
+              echo "php8-4"
+              echo "php8-5"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           else
