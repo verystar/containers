@@ -20,12 +20,14 @@ RUN yum update ; \
     && echo "${TZ}" > /etc/timezone
 
 # maven
-RUN curl -sk -o /tmp/apache-maven-${maven_version}-bin.tar.gz https://dlcdn.apache.org/maven/maven-3/${maven_version}/binaries/apache-maven-${maven_version}-bin.tar.gz \
+# 使用 archive.apache.org 而非 dlcdn.apache.org：dlcdn 仅保留最新版本，旧版本（如 3.8.8）会返回 404
+RUN curl -skL -o /tmp/apache-maven-${maven_version}-bin.tar.gz https://archive.apache.org/dist/maven/maven-3/${maven_version}/binaries/apache-maven-${maven_version}-bin.tar.gz \
     && tar -xf /tmp/apache-maven-${maven_version}-bin.tar.gz -C /usr/local \
     && rm /tmp/apache-maven-${maven_version}-bin.tar.gz
 COPY settings.xml /usr/local/apache-maven-${maven_version}/conf/settings.xml
 
 # gradle
-RUN curl -sk -o /tmp/gradle-${gradle_version}-bin.zip https://downloads.gradle-dn.com/distributions/gradle-${gradle_version}-bin.zip \
+# 使用 services.gradle.org 而非 downloads.gradle-dn.com：避免第三方镜像不稳定，改用官方稳定源
+RUN curl -skL -o /tmp/gradle-${gradle_version}-bin.zip https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip \
     && unzip /tmp/gradle-${gradle_version}-bin.zip -d /usr/local \
     && rm /tmp/gradle-${gradle_version}-bin.zip
