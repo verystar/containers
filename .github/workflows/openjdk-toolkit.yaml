@@ -22,33 +22,37 @@ env:
   IMAGE_NAME: openjdk
 
 jobs:
-  build-and-push-image:
+  prepare:
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.target == 'all' || matrix.jdk == github.event.inputs.target }}
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Set matrix
+        id: set-matrix
+        shell: bash
+        run: |
+          target="${{ github.event.inputs.target }}"
+          full='[
+            {"jdk":"8","openjdk_version":"8u502","gradle_version":"7.4.2","maven_version":"3.8.8"},
+            {"jdk":"11","openjdk_version":"11.0.32","gradle_version":"7.4.2","maven_version":"3.8.8"},
+            {"jdk":"17","openjdk_version":"17.0.20","gradle_version":"8.14.5","maven_version":"3.9.16"},
+            {"jdk":"21","openjdk_version":"21.0.12","gradle_version":"8.14.5","maven_version":"3.9.16"},
+            {"jdk":"25","openjdk_version":"25.0.4","gradle_version":"9.6.1","maven_version":"3.9.16"}
+          ]'
+          if [ "$target" = "all" ]; then
+            matrix=$(printf '%s' "$full" | jq -c '.')
+          else
+            matrix=$(printf '%s' "$full" | jq -c --arg t "$target" 'map(select(.jdk == $t))')
+          fi
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  build-and-push-image:
+    needs: prepare
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        include:
-          - jdk: 8
-            openjdk_version: 8u502
-            gradle_version: 7.4.2
-            maven_version: 3.8.8
-          - jdk: 11
-            openjdk_version: 11.0.32
-            gradle_version: 7.4.2
-            maven_version: 3.8.8
-          - jdk: 17
-            openjdk_version: 17.0.20
-            gradle_version: 8.14.5
-            maven_version: 3.9.16
-          - jdk: 21
-            openjdk_version: 21.0.12
-            gradle_version: 8.14.5
-            maven_version: 3.9.16
-          - jdk: 25
-            openjdk_version: 25.0.4
-            gradle_version: 9.6.1
-            maven_version: 3.9.16
+        include: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
