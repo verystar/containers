@@ -55,6 +55,26 @@ target "php74-composer2" {
   tags = tag("${target.php74-composer2.args.php_version}", "${target.php74-composer2.args.composer_version}")
 }
 
+target "php80-composer2" {
+  inherits = ["common"]
+  context = "php/8.0-composer"
+  args = {
+    php_version = "8.0.30-fpm"
+    composer_version = "2.8.5"
+  }
+  tags = tag("${target.php80-composer2.args.php_version}", "${target.php80-composer2.args.composer_version}")
+}
+
+target "php81-composer2" {
+  inherits = ["common"]
+  context = "php/8.1-composer"
+  args = {
+    php_version = "8.1.34-fpm"
+    composer_version = "2.8.5"
+  }
+  tags = tag("${target.php81-composer2.args.php_version}", "${target.php81-composer2.args.composer_version}")
+}
+
 target "php82-composer2" {
   inherits = ["common"]
   context = "php/8.2-composer"
@@ -63,4 +83,34 @@ target "php82-composer2" {
     composer_version = "2.8.5"
   }
   tags = tag("${target.php82-composer2.args.php_version}", "${target.php82-composer2.args.composer_version}")
+}
+
+target "php83-composer2" {
+  inherits = ["common"]
+  context = "php/8.3-composer"
+  args = {
+    php_version = "8.3.33-fpm"
+    composer_version = "2.8.5"
+  }
+  tags = tag("${target.php83-composer2.args.php_version}", "${target.php83-composer2.args.composer_version}")
+}
+
+target "php84-composer2" {
+  inherits = ["common"]
+  context = "php/8.4-composer"
+  args = {
+    php_version = "8.4.24-fpm"
+    composer_version = "2.8.5"
+  }
+  tags = tag("${target.php84-composer2.args.php_version}", "${target.php84-composer2.args.composer_version}")
+}
+
+target "php85-composer2" {
+  inherits = ["common"]
+  context = "php/8.5-composer"
+  args = {
+    php_version = "8.5.9-fpm"
+    composer_version = "2.8.5"
+  }
+  tags = tag("${target.php85-composer2.args.php_version}", "${target.php85-composer2.args.composer_version}")
 }

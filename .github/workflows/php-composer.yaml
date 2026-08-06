@@ -19,7 +19,12 @@ on:
           - php72-composer2
           - php73-composer2
           - php74-composer2
+          - php80-composer2
+          - php81-composer2
           - php82-composer2
+          - php83-composer2
+          - php84-composer2
+          - php85-composer2
 
 permissions:
   packages: write
@@ -69,7 +74,12 @@ jobs:
               echo "php72-composer2"
               echo "php73-composer2"
               echo "php74-composer2"
+              echo "php80-composer2"
+              echo "php81-composer2"
               echo "php82-composer2"
+              echo "php83-composer2"
+              echo "php84-composer2"
+              echo "php85-composer2"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           else

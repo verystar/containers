@@ -2,7 +2,7 @@ ARG php_version
 ARG composer_version
 
 # 使用线上 PHP 镜像作为基础基础镜像
-FROM registry.verystar.net/library/php:${php_version:-"8.2-fpm"}
+FROM registry.verystar.net/library/php:${php_version:-"8.0-fpm"}
 ARG composer_version
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
