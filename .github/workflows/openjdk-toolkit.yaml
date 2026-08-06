@@ -57,6 +57,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
+      - name: Prepare versions
+        id: prep
+        env:
+          GRADLE_VERSION: ${{ matrix.gradle_version }}
+          MAVEN_VERSION: ${{ matrix.maven_version }}
+        run: |
+          echo "gradle=${GRADLE_VERSION%.*}" >> "$GITHUB_OUTPUT"
+          echo "maven=${MAVEN_VERSION%.*}" >> "$GITHUB_OUTPUT"
+          echo "ts=$(TZ=Asia/Shanghai date '+%Y%m%d%H%M%S')" >> "$GITHUB_OUTPUT"
+
       - name: Docker Metadata
         id: meta
         uses: docker/metadata-action@v6
@@ -66,7 +76,9 @@ jobs:
             verystar/${{ env.IMAGE_NAME }}
             registry.verystar.net/library/${{ env.IMAGE_NAME }}
           tags: |
+            type=raw,value=${{ matrix.jdk }}-gradle-${{ steps.prep.outputs.gradle }}-maven-${{ steps.prep.outputs.maven }}
             type=raw,value=${{ matrix.jdk }}-gradle-${{ matrix.gradle_version }}-maven-${{ matrix.maven_version }}
+            type=raw,value=${{ matrix.jdk }}-gradle-${{ matrix.gradle_version }}-maven-${{ matrix.maven_version }}-${{ steps.prep.outputs.ts }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4

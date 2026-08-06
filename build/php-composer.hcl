@@ -7,9 +7,15 @@ target "common" {
   platforms = ["linux/amd64", "linux/arm64"]
 }
 
+function "major_minor" {
+  params = [version]
+  result = format("%s.%s", split(".", version)[0], split(".", version)[1])
+}
+
 function "tag" {
   params = [php_version, composer_version]
   result = [
+    format("registry.verystar.net/library/php:%s-%s", replace("${php_version}", "-fpm", "-composer"), major_minor("${composer_version}")),
     format("registry.verystar.net/library/php:%s-%s", replace("${php_version}", "-fpm", "-composer"), "${composer_version}"),
     format("registry.verystar.net/library/php:%s-%s-%s", replace("${php_version}", "-fpm", "-composer"), "${composer_version}", "${CURRENT_TIME}"),
   ]
