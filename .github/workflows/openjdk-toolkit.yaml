@@ -11,6 +11,7 @@ on:
           - all
           - 8
           - 11
+          - 15
           - 17
           - 21
           - 25
@@ -35,6 +36,7 @@ jobs:
           full='[
             {"jdk":"8","openjdk_version":"8u502","gradle_version":"7.4.2","maven_version":"3.8.8"},
             {"jdk":"11","openjdk_version":"11.0.32","gradle_version":"7.4.2","maven_version":"3.8.8"},
+            {"jdk":"15","openjdk_version":"15.0.2","gradle_version":"7.4.2","maven_version":"3.8.8"},
             {"jdk":"17","openjdk_version":"17.0.20","gradle_version":"8.14.5","maven_version":"3.9.16"},
             {"jdk":"21","openjdk_version":"21.0.12","gradle_version":"8.14.5","maven_version":"3.9.16"},
             {"jdk":"25","openjdk_version":"25.0.4","gradle_version":"9.6.1","maven_version":"3.9.16"}
