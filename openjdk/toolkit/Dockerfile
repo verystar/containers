@@ -14,7 +14,7 @@ ENV GRADLE_DIR="/usr/local/gradle-${gradle_version}"
 ENV PATH "$MAVEN_DIR/bin:$GRADLE_DIR/bin:$PATH"
 
 RUN yum update ; \
-    yum install -y --setopt=skip_missing_names_on_install=False unzip tar gzip \
+    yum install -y --setopt=skip_missing_names_on_install=False unzip tar gzip shadow-utils \
     && rm -rf /var/cache/yum \
     && ln -sf /usr/share/zoneinfo/${TZ} /etc/localtime \
     && echo "${TZ}" > /etc/timezone
