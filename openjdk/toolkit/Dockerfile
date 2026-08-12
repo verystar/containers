@@ -31,3 +31,7 @@ COPY settings.xml /usr/local/apache-maven-${maven_version}/conf/settings.xml
 RUN curl -skL -o /tmp/gradle-${gradle_version}-bin.zip https://services.gradle.org/distributions/gradle-${gradle_version}-bin.zip \
     && unzip /tmp/gradle-${gradle_version}-bin.zip -d /usr/local \
     && rm /tmp/gradle-${gradle_version}-bin.zip
+
+## For Tekton CI
+RUN groupadd --gid 65532 tekton && \
+    useradd --uid 65532 --gid tekton --home-dir /home/tekton --create-home --shell /bin/bash tekton
