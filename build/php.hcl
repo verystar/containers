@@ -90,7 +90,7 @@ target "php8-2" {
   context = "php/8.2-fpm"
   inherits = ["common"]
   args = {
-    php_version = "8.2.33-fpm"
+    php_version = "8.2.35-fpm"
     redis_version = "6.3.0"
     yaf_version = "3.3.7"
     mcrypt_version = "1.0.9"
@@ -144,7 +144,7 @@ target "php8-3" {
   context = "php/8.3-fpm"
   inherits = ["common"]
   args = {
-    php_version = "8.3.33-fpm"
+    php_version = "8.3.36-fpm"
     redis_version = "6.3.0"
     yaf_version = "3.3.7"
     mcrypt_version = "1.0.9"
@@ -162,7 +162,7 @@ target "php8-4" {
   context = "php/8.4-fpm"
   inherits = ["common"]
   args = {
-    php_version = "8.4.24-fpm"
+    php_version = "8.4.27-fpm"
     redis_version = "6.3.0"
     yaf_version = "3.3.7"
     mcrypt_version = "1.0.9"
@@ -180,7 +180,7 @@ target "php8-5" {
   context = "php/8.5-fpm"
   inherits = ["common"]
   args = {
-    php_version = "8.5.9-fpm"
+    php_version = "8.5.12-fpm"
     redis_version = "6.3.0"
     yaf_version = "3.3.7"
     mcrypt_version = "1.0.9"
