@@ -18,6 +18,7 @@ on:
           - php7-1
           - php7-2
           - php7-3
+          - php7-4-base
           - php7-4
           - php8-0
           - php8-1
@@ -73,6 +74,7 @@ jobs:
               echo "php7-1"
               echo "php7-2"
               echo "php7-3"
+              echo "php7-4-base"
               echo "php7-4"
               echo "php8-0"
               echo "php8-1"

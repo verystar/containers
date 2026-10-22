@@ -55,7 +55,7 @@ target "php74-composer2" {
   inherits = ["common"]
   context = "php/7.4-composer"
   args = {
-    php_version = "7.4.33-fpm"
+    php_version = "7.4.34-fpm"
     composer_version = "2.2.0"
   }
   tags = tag("${target.php74-composer2.args.php_version}", "${target.php74-composer2.args.composer_version}")

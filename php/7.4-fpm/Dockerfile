@@ -6,7 +6,8 @@ ARG libssh2_version
 ARG ssh2_version
 ARG nsq_version
 
-FROM php:${php_version:-"7.4-fpm"}
+# 基于 7.4-fpm-base(含 CVE-2026-109618/109619 修复的自建镜像),不再是官方 php:7.4-fpm
+FROM registry.verystar.net/library/php:${php_version:-"7.4.34-fpm-base"}
 
 ARG mcrypt_version
 ARG redis_version

@@ -1,6 +1,6 @@
 # PHP FPM 镜像
 
-构建配置见 `build/php.hcl`,基础镜像来自 `php:*-fpm` 官方镜像。
+构建配置见 `build/php.hcl`,基础镜像来自 `php:*-fpm` 官方镜像(7.4 除外,已改自建,见下文)。
 
 ## PHP 版本支持状态
 
@@ -11,7 +11,32 @@
 | 7.1    | 7.1.33     | `php:7.1.33-fpm` | EOL 2019-12,已最新 |
 | 7.2    | 7.2.34     | `php:7.2.34-fpm` | EOL 2020-11,已最新 |
 | 7.3    | 7.3.33     | `php:7.3.33-fpm` | EOL 2021-12,已最新 |
-| 7.4    | 7.4.33     | `php:7.4.33-fpm` | EOL 2022-11,已最新 |
+| 7.4    | 7.4.34     | 自建 `7.4.34-fpm` | EOL 2022-11,含 CVE-2026-109618/109619 修复 |
+
+### PHP 7.4 自建基础镜像
+
+官方 `php:7.4.33-fpm` 已随 7.4 EOL 停更,永远不包含
+[CVE-2026-109618 / CVE-2026-109619](https://github.com/php/php-src/tree/PHP-7.4-CVE-2026-109618-109619)
+修复,因此 7.4 改为在 `php/7.4-fpm-base` 参照 docker-library 官方 Dockerfile
+(底座 `debian:bullseye-slim`,与官方 `php:7.4.33-fpm` 一致)
+从 php-src CVE 修复分支(commit `712e60f`,sha256 校验)从源码自建基础镜像:
+
+```
+php-src CVE 分支 → php:7.4-fpm-base(base 层)
+    → php:7.4-fpm(扩展层,原 Dockerfile 仅改 FROM)
+        → php:7.4-composer(不变,引用内部 7.4-fpm)
+```
+
+- 底座为 bullseye,与官方及旧生产 `7.4.33-fpm` 系镜像一致,系统库吃到
+  bullseye 最后一批安全修订(curl `7.74.0-1.3+deb11u16`、openssl `1.1.1w`、
+  libxml2 `2.9.10+deb11u10`)。bullseye 2026-08 结束 LTS 后 deb.debian.org 与
+  阿里云均已摘除其包文件,apt 源固定指向 `archive.debian.org` 官方归档;
+  archive 的 buster 库基线更旧且不再更新,勿改用
+- 构建顺序:先 dispatch `php7-4-base`,完成后再 dispatch `php7-4`(选 `all`
+  不含 base,需单独选择),最后触发 `php-composer` 的 `php74` 构建
+- 镜像内 `php -v` 显示 `7.4.34-dev`(CVE 分支 HEAD 版本号),版本 tag 为 `7.4.34-fpm(-base)`
+- 上游 CVE 分支再叠加修复时:更新 `php/7.4-fpm-base/Dockerfile` 中的
+  `PHP_URL`(commit)与 `PHP_SHA256`,重建三层即可
 
 ### PHP 8
 
@@ -35,7 +60,7 @@
 | 7.1      | `php:7.1.33-fpm`  | 2.2.0     | 已支持 |
 | 7.2      | `php:7.2.34-fpm`  | 2.2.0     | 已支持 |
 | 7.3      | `php:7.3.33-fpm`  | 2.2.0     | 已支持 |
-| 7.4      | `php:7.4.33-fpm`  | 2.2.0     | 已支持 |
+| 7.4      | 自建 `7.4.34-fpm` | 2.2.0     | 已支持 |
 | 8.0      | `php:8.0.30-fpm`  | 2.8.5     | 已支持 |
 | 8.1      | `php:8.1.34-fpm`  | 2.8.5     | 已支持 |
 | 8.2      | `php:8.2.33-fpm`  | 2.8.5     | 已支持 |
@@ -47,7 +72,7 @@
 
 ### PHP 7
 
-| 扩展    | 7.1.33 | 7.2.34 | 7.3.33 | 7.4.33 |
+| 扩展    | 7.1.33 | 7.2.34 | 7.3.33 | 7.4.34 |
 | ------- | ------ | ------ | ------ | ------ |
 | redis   | 4.2.0  | 4.2.0  | 5.3.7  | 5.3.7  |
 | yaf     | 3.0.7  | 3.0.7  | 3.3.5  | 3.3.5  |

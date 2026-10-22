@@ -68,11 +68,21 @@ target "php7-3" {
   )
 }
 
+# 从源码构建的 7.4 基础镜像,含 CVE-2026-109618/109619 修复(官方 7.4 已 EOL 不再发镜像)
+target "php7-4-base" {
+  context = "php/7.4-fpm-base"
+  inherits = ["common"]
+  tags = concat(
+    ["registry.verystar.net/library/php:7.4-fpm-base"],
+    tag("7.4.34-fpm-base"),
+  )
+}
+
 target "php7-4" {
   context = "php/7.4-fpm"
   inherits = ["common"]
   args = {
-    php_version = "7.4.33-fpm"
+    php_version = "7.4.34-fpm-base"
     redis_version = "5.3.7"
     yaf_version = "3.3.5"
     mcrypt_version = "1.0.6"
@@ -82,7 +92,7 @@ target "php7-4" {
   }
   tags = concat(
     ["registry.verystar.net/library/php:7.4-fpm"],
-    tag("${target.php7-4.args.php_version}"),
+    tag("7.4.34-fpm"),
   )
 }
 
