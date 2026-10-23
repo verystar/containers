@@ -96,6 +96,29 @@ target "php7-4" {
   )
 }
 
+# 客户版 7.4 镜像:与 php7-4 同源(同一 base、同一扩展集),session 默认
+# files(客户不一定有 Redis,内部 Redis 地址也不可推公开仓库),仅推 DockerHub;
+# 客户需要 Redis session 时注入环境变量 SESSION_SAVE_PATH 自动切换
+target "php7-4-github" {
+  context = "php/7.4-fpm-github"
+  inherits = ["common"]
+  # 客户环境仅 amd64,覆盖 common 的双平台
+  platforms = ["linux/amd64"]
+  args = {
+    php_version = "7.4.34-fpm-base"
+    redis_version = "5.3.7"
+    yaf_version = "3.3.5"
+    mcrypt_version = "1.0.6"
+    libssh2_version = "1.11.0"
+    ssh2_version = "1.4"
+    nsq_version = "3.5.1"
+  }
+  tags = [
+    "verystar/php:7.4-fpm",
+    "verystar/php:7.4.34-fpm",
+  ]
+}
+
 target "php8-2" {
   context = "php/8.2-fpm"
   inherits = ["common"]

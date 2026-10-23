@@ -25,6 +25,7 @@
 php-src CVE 分支 → php:7.4-fpm-base(base 层)
     → php:7.4-fpm(扩展层,原 Dockerfile 仅改 FROM)
         → php:7.4-composer(不变,引用内部 7.4-fpm)
+    → verystar/php:7.4-fpm(客户版扩展层,仅推 DockerHub,见下节)
 ```
 
 - 底座为 bullseye,与官方及旧生产 `7.4.33-fpm` 系镜像一致,系统库吃到
@@ -32,11 +33,29 @@ php-src CVE 分支 → php:7.4-fpm-base(base 层)
   libxml2 `2.9.10+deb11u10`)。bullseye 2026-08 结束 LTS 后 deb.debian.org 与
   阿里云均已摘除其包文件,apt 源固定指向 `archive.debian.org` 官方归档;
   archive 的 buster 库基线更旧且不再更新,勿改用
-- 构建顺序:先 dispatch `php7-4-base`,完成后再 dispatch `php7-4`(选 `all`
-  不含 base,需单独选择),最后触发 `php-composer` 的 `php74` 构建
+- 构建顺序:先 dispatch `php7-4-base`,完成后再 dispatch `php7-4` 与
+  `php7-4-github`(base 更新当日需分步单独构建,勿一次选 `all`),最后触发
+  `php-composer` 的 `php74` 构建
 - 镜像内 `php -v` 显示 `7.4.34-dev`(CVE 分支 HEAD 版本号),版本 tag 为 `7.4.34-fpm(-base)`
 - 上游 CVE 分支再叠加修复时:更新 `php/7.4-fpm-base/Dockerfile` 中的
   `PHP_URL`(commit)与 `PHP_SHA256`,重建三层即可
+
+### 客户镜像(DockerHub)
+
+`php/7.4-fpm-github` 是面向客户的 7.4 发布变体,构建配置见 `build/php.hcl`
+的 `php7-4-github` target,仅推 DockerHub,不进内部 registry:
+
+- 与内部 `php:7.4-fpm` 同源:同一 `7.4.34-fpm-base` 基础镜像、同一扩展集与
+  php.ini/php-fpm 配置;内部 7.4 升级时需同步修改两份 Dockerfile
+- 不内置默认 `SESSION_SAVE_PATH`(内部 Redis 地址不可推公开仓库),客户运行时
+  通过环境变量注入自己的 Redis 地址:
+
+  ```
+  docker run -e SESSION_SAVE_PATH=tcp://<redis-host>:6379 verystar/php:7.4-fpm
+  ```
+
+- 仅构建 `linux/amd64` 单平台(客户环境无 arm64 需求)
+- 发布 tag:`verystar/php:7.4-fpm`、`verystar/php:7.4.34-fpm`
 
 ### PHP 8
 
