@@ -81,6 +81,7 @@ target "php7-4-base" {
 target "php7-4" {
   context = "php/7.4-fpm"
   inherits = ["common"]
+  platforms = ["linux/amd64"]
   args = {
     php_version = "7.4.34-fpm-base"
     redis_version = "5.3.7"

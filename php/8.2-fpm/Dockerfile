@@ -136,6 +136,8 @@ RUN sed -i -e "s/access.log/;access.log/g" /usr/local/etc/php-fpm.d/docker.conf 
     && echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT" >> /usr/local/etc/php/php.ini \
     && echo "error_log = /proc/self/fd/2" >> /usr/local/etc/php/php.ini \
     && echo "session.save_handler = redis" >> /usr/local/etc/php/php.ini \
+    # CVE-2026-115560：禁用会话上传进度
+    && echo "session.upload_progress.enabled = 0" >> /usr/local/etc/php/php.ini \
     # 设置PHP最大执行时间
     && echo "max_execution_time = MAX_EXECUTION_TIME" >> /usr/local/etc/php/php.ini
 
