@@ -27,7 +27,6 @@ jobs:
           - version: 25.0.5
           - version: 21.0.13
           - version: 17.0.21
-          - version: 15.0.2
           - version: 11.0.33
           - version: 8u514
     steps:
