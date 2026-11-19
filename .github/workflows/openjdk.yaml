@@ -15,7 +15,7 @@ permissions:
 
 env:
   IMAGE_NAME: openjdk
-  IMAGE_LATEST_TAG: 17.0.2
+  IMAGE_LATEST_TAG: 25.0.5
 
 jobs:
   build-and-push-image:
@@ -24,14 +24,12 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - version: 17.0.2
-            jmx_prometheus_javaagent_version: 0.19.0
+          - version: 25.0.5
+          - version: 21.0.13
+          - version: 17.0.21
           - version: 15.0.2
-            jmx_prometheus_javaagent_version: 0.19.0
-          - version: 14.0.2
-            jmx_prometheus_javaagent_version: 0.19.0
-          - version: 11.0.16
-            jmx_prometheus_javaagent_version: 0.19.0
+          - version: 11.0.33
+          - version: 8u514
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -102,6 +100,5 @@ jobs:
           # linux/arm64
           build-args: |
             VERSION=${{ matrix.version }}
-            JMX_PROMETHEUS_JAVAAGENT_VERSION=${{ matrix.jmx_prometheus_javaagent_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
