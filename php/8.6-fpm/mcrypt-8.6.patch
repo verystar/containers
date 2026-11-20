@@ -1,0 +1,42 @@
+diff -ruN mcrypt-orig/mcrypt_filter.c mcrypt-new/mcrypt_filter.c
+--- mcrypt-orig/mcrypt_filter.c	2026-11-20 19:38:50
++++ mcrypt-new/mcrypt_filter.c	2026-11-20 19:38:53
+@@ -139,23 +139,23 @@
+ }
+ 
+ static php_stream_filter_ops php_mcrypt_filter_ops = {
+-    php_mcrypt_filter,
+-    php_mcrypt_filter_dtor,
+-    "mcrypt.*"
++    .filter = php_mcrypt_filter,
++    .dtor = php_mcrypt_filter_dtor,
++    .label = "mcrypt.*"
+ };
+ 
+ /* {{{ php_mcrypt_filter_create
+  * Instantiate mcrypt filter
+  */
+-static php_stream_filter *php_mcrypt_filter_create(const char *filtername, zval *filterparams, uint8_t persistent)
++static php_stream_filter *php_mcrypt_filter_create(const char *filtername, zval *filterparams, bool persistent)
+ {
+ 	int encrypt = 1, iv_len, key_len, keyl, result;
+ 	const char *cipher = filtername + sizeof("mcrypt.") - 1;
+ 	zval *tmpzval;
+ 	MCRYPT mcrypt_module;
+ 	char *iv = NULL, *key = NULL;
+-	char *algo_dir = INI_STR("mcrypt.algorithms_dir");
+-	char *mode_dir = INI_STR("mcrypt.modes_dir");
++	char *algo_dir = (char *) zend_ini_string_literal("mcrypt.algorithms_dir");
++	char *mode_dir = (char *) zend_ini_string_literal("mcrypt.modes_dir");
+ 	char *mode = "cbc";
+ 	php_mcrypt_filter_data *data;
+ 
+@@ -265,7 +265,7 @@
+ 	data->block_used = 0;
+ 	data->persistent = persistent;
+ 
+-	return php_stream_filter_alloc(&php_mcrypt_filter_ops, data, persistent);
++	return php_stream_filter_alloc(&php_mcrypt_filter_ops, data, persistent, PSFS_SEEKABLE_NEVER, PSFS_SEEKABLE_NEVER);
+ }
+ /* }}} */
+ 

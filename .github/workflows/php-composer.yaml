@@ -25,6 +25,7 @@ on:
           - php83-composer2
           - php84-composer2
           - php85-composer2
+          - php86-composer2
 
 permissions:
   packages: write
@@ -80,6 +81,7 @@ jobs:
               echo "php83-composer2"
               echo "php84-composer2"
               echo "php85-composer2"
+              echo "php86-composer2"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           else

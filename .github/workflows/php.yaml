@@ -27,6 +27,7 @@ on:
           - php8-3
           - php8-4
           - php8-5
+          - php8-6
 
 permissions:
   packages: write
@@ -84,6 +85,7 @@ jobs:
               echo "php8-3"
               echo "php8-4"
               echo "php8-5"
+              echo "php8-6"
               echo "EOF"
             } >> "$GITHUB_OUTPUT"
           else

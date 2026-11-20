@@ -1,0 +1,221 @@
+diff -ruN yaf-orig/configs/yaf_config_ini.c yaf-new/configs/yaf_config_ini.c
+--- yaf-orig/configs/yaf_config_ini.c	2026-11-20 19:34:28
++++ yaf-new/configs/yaf_config_ini.c	2026-11-20 19:42:21
+@@ -123,7 +123,7 @@
+ 		seg = delim + 1;
+ 		if ((delim = memchr(seg, '.', len))) {
+ 			if (Z_TYPE_P(val) != IS_ARRAY) {
+-				zval_dtor(val);
++				zval_ptr_dtor(val);
+ 				array_init(val);
+ 			} else {
+ 				SEPARATE_ARRAY(val);
+@@ -168,7 +168,7 @@
+ 					Z_TRY_ADDREF_P(value);
+ 				} else {
+ 					if (zend_hash_num_elements(Z_ARRVAL_P(arr)) && (val = zend_symtable_find(Z_ARRVAL_P(arr), Z_STR_P(key)))) {
+-						zval_dtor(val);
++						zval_ptr_dtor(val);
+ 						ZVAL_COPY(val, value);
+ 					} else {
+ 						zend_symtable_update(Z_ARRVAL_P(arr), Z_STR_P(key), value);
+@@ -205,7 +205,7 @@
+ 						}
+ 
+ 						if (Z_TYPE_P(parent) != IS_ARRAY) {
+-							zval_dtor(parent);
++							zval_ptr_dtor(parent);
+ 							array_init(parent);
+ 							array_init(&rv);
+ 							val = zend_symtable_str_update(Z_ARRVAL_P(parent), seg, len, &rv);
+@@ -213,7 +213,7 @@
+ 							SEPARATE_ARRAY(parent);
+ 							if ((val = zend_symtable_str_find(Z_ARRVAL_P(parent), seg, len))) {
+ 								if (Z_TYPE_P(val) != IS_ARRAY) {
+-									zval_dtor(val);
++									zval_ptr_dtor(val);
+ 									array_init(val);
+ 								}
+ 							} else {
+@@ -224,7 +224,7 @@
+ 					} else {
+ 						if ((val = zend_symtable_find(Z_ARRVAL_P(arr), Z_STR_P(key)))) {
+ 							if (Z_TYPE_P(val) != IS_ARRAY) {
+-								zval_dtor(val);
++								zval_ptr_dtor(val);
+ 								array_init(val);
+ 							 } else {
+ 								 SEPARATE_ARRAY(val);
+diff -ruN yaf-orig/php_yaf.h yaf-new/php_yaf.h
+--- yaf-orig/php_yaf.h	2026-11-20 19:34:28
++++ yaf-new/php_yaf.h	2026-11-20 19:42:21
+@@ -51,7 +51,13 @@
+ #define YAF_STARTUP(module)	 		  	ZEND_MODULE_STARTUP_N(yaf_##module)(INIT_FUNC_ARGS_PASSTHRU)
+ #define YAF_SHUTDOWN_FUNCTION(module)  	ZEND_MSHUTDOWN_FUNCTION(yaf_##module)
+ #define YAF_SHUTDOWN(module)	 	    ZEND_MODULE_SHUTDOWN_N(yaf_##module)(INIT_FUNC_ARGS_PASSTHRU)
++#if PHP_VERSION_ID < 80600
+ #define YAF_ME(c, m, a, f)              {m, PHP_MN(c), a, (unsigned)(sizeof(a)/sizeof(struct _zend_arg_info)-1), f},
++#else
++/* PHP 8.6 起 zend_function_entry 的 flags 变为 uint64_t 并新增 frameless_function_infos,
++ * arg_info 实际类型为 zend_internal_arg_info(与 zend_arg_info 大小不同),此处按新结构初始化 */
++#define YAF_ME(c, m, a, f)              {m, PHP_MN(c), a, (uint32_t)(sizeof(a)/sizeof(zend_internal_arg_info)-1), f, NULL, NULL},
++#endif
+ #define YAF_VAR_FLAGS(v)                ((v).u2.next)
+ 
+ #if PHP_VERSION_ID < 70200
+diff -ruN yaf-orig/requests/yaf_request_http.c yaf-new/requests/yaf_request_http.c
+--- yaf-orig/requests/yaf_request_http.c	2026-11-20 19:34:28
++++ yaf-new/requests/yaf_request_http.c	2026-11-20 19:42:21
+@@ -138,7 +138,7 @@
+ 	zend_string *request_uri = NULL;
+ 	zend_string *base_uri = NULL;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "|SS", &request_uri, &base_uri) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|SS", &request_uri, &base_uri) == FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/requests/yaf_request_simple.c yaf-new/requests/yaf_request_simple.c
+--- yaf-orig/requests/yaf_request_simple.c	2026-11-20 19:34:28
++++ yaf-new/requests/yaf_request_simple.c	2026-11-20 19:42:21
+@@ -111,7 +111,7 @@
+ 	zend_string *method = NULL;
+ 	zval *params = NULL;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "|S!S!S!S!a", &method, &module, &controller, &action, &params) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|S!S!S!S!a", &method, &module, &controller, &action, &params) == FAILURE) {
+ 		return;
+ 	}
+ 	yaf_request_simple_init(Z_YAFREQUESTOBJ_P(getThis()), module, controller, action, method, params);
+diff -ruN yaf-orig/routes/yaf_route_map.c yaf-new/routes/yaf_route_map.c
+--- yaf-orig/routes/yaf_route_map.c	2026-11-20 19:34:28
++++ yaf-new/routes/yaf_route_map.c	2026-11-20 19:42:21
+@@ -318,7 +318,7 @@
+ 	zend_string *delim	= NULL;
+ 	zend_bool ctl_prefer = 0;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "|bS!", &ctl_prefer, &delim) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|bS!", &ctl_prefer, &delim) == FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/routes/yaf_route_regex.c yaf-new/routes/yaf_route_regex.c
+--- yaf-orig/routes/yaf_route_regex.c	2026-11-20 19:34:28
++++ yaf-new/routes/yaf_route_regex.c	2026-11-20 19:42:21
+@@ -422,7 +422,7 @@
+ 	zend_string *reverse = NULL;
+ 	zval *route, *map = NULL, *verify = NULL;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "Sa|a!a!S!", &match, &route, &map, &verify, &reverse) ==  FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "Sa|a!a!S!", &match, &route, &map, &verify, &reverse) ==  FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/routes/yaf_route_rewrite.c yaf-new/routes/yaf_route_rewrite.c
+--- yaf-orig/routes/yaf_route_rewrite.c	2026-11-20 19:34:28
++++ yaf-new/routes/yaf_route_rewrite.c	2026-11-20 19:42:21
+@@ -449,7 +449,7 @@
+ 	zend_string *match;
+ 	zval *route, *verify = NULL;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "Sa|a", &match, &route, &verify) ==  FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "Sa|a", &match, &route, &verify) ==  FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/routes/yaf_route_simple.c yaf-new/routes/yaf_route_simple.c
+--- yaf-orig/routes/yaf_route_simple.c	2026-11-20 19:34:28
++++ yaf-new/routes/yaf_route_simple.c	2026-11-20 19:42:21
+@@ -228,7 +228,7 @@
+ PHP_METHOD(yaf_route_simple, __construct) {
+ 	zend_string *m, *c, *a;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "SSS", &m, &c, &a) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "SSS", &m, &c, &a) == FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/routes/yaf_route_supervar.c yaf-new/routes/yaf_route_supervar.c
+--- yaf-orig/routes/yaf_route_supervar.c	2026-11-20 19:34:28
++++ yaf-new/routes/yaf_route_supervar.c	2026-11-20 19:42:21
+@@ -196,7 +196,7 @@
+ PHP_METHOD(yaf_route_supervar, __construct) {
+ 	zend_string *varname;
+ 
+-    if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "S", &varname) == FAILURE) {
++    if (zend_parse_parameters(ZEND_NUM_ARGS(), "S", &varname) == FAILURE) {
+         return;
+     }
+ 
+diff -ruN yaf-orig/views/yaf_view_simple.c yaf-new/views/yaf_view_simple.c
+--- yaf-orig/views/yaf_view_simple.c	2026-11-20 19:34:28
++++ yaf-new/views/yaf_view_simple.c	2026-11-20 19:42:21
+@@ -398,7 +398,7 @@
+ #else
+         op_array = zend_compile_string(Z_STR(phtml), eval_desc, ZEND_COMPILE_POSITION_AFTER_OPEN_TAG);
+ #endif
+-		zval_dtor(&phtml);
++		zval_ptr_dtor(&phtml);
+ 		efree(eval_desc);
+ 
+ 		if (op_array) {
+@@ -440,7 +440,7 @@
+ 	zend_string *tpl_dir;
+ 	zval *options = NULL;
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "S|a!", &tpl_dir, &options) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "S|a!", &tpl_dir, &options) == FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/yaf_application.c yaf-new/yaf_application.c
+--- yaf-orig/yaf_application.c	2026-11-20 19:34:28
++++ yaf-new/yaf_application.c	2026-11-20 19:42:21
+@@ -728,7 +728,7 @@
+ 	yaf_loader_t *loader;
+ 	yaf_application_object *app = Z_YAFAPPOBJ_P(getThis());
+ 
+-	if (zend_parse_parameters_throw(ZEND_NUM_ARGS(), "z|S", &config, &section) == FAILURE) {
++	if (zend_parse_parameters(ZEND_NUM_ARGS(), "z|S", &config, &section) == FAILURE) {
+ 		return;
+ 	}
+ 
+diff -ruN yaf-orig/yaf_loader.c yaf-new/yaf_loader.c
+--- yaf-orig/yaf_loader.c	2026-11-20 19:34:28
++++ yaf-new/yaf_loader.c	2026-11-20 19:42:21
+@@ -131,8 +131,10 @@
+ 			1,
+ #if PHP_VERSION_ID < 80000
+             1
+-#else
++#elif PHP_VERSION_ID < 80600
+            NULL
++#else
++            0
+ #endif
+ 		};
+ 
+diff -ruN yaf-orig/yaf_response.c yaf-new/yaf_response.c
+--- yaf-orig/yaf_response.c	2026-11-20 19:34:28
++++ yaf-new/yaf_response.c	2026-11-20 19:42:21
+@@ -481,7 +481,7 @@
+ 	if (!name) {
+ 		body = yaf_response_get_body(response, YAF_KNOWN_STR(YAF_CONTENT));
+ 	} else {
+-		if (ZVAL_IS_NULL(name)) {
++		if (Z_ISNULL_P(name)) {
+ 			if (response->body) {
+ 				RETVAL_ARR(response->body);
+ 				GC_ADDREF(response->body);
+diff -ruN yaf-orig/yaf_view.c yaf-new/yaf_view.c
+--- yaf-orig/yaf_view.c	2026-11-20 19:34:28
++++ yaf-new/yaf_view.c	2026-11-20 19:42:21
+@@ -63,7 +63,7 @@
+ 		/* error handle? */
+ 	}
+ 	zval_ptr_dtor(&ret);
+-	zval_dtor(&arg);
++	zval_ptr_dtor(&arg);
+ }
+ /* }}} */
+ 

@@ -227,3 +227,22 @@ target "php8-5" {
     tag("${target.php8-5.args.php_version}"),
   )
 }
+
+target "php8-6" {
+  context = "php/8.6-fpm"
+  inherits = ["common"]
+  args = {
+    php_version = "8.6.0-fpm"
+    # 6.3.0 尚不支持 PHP 8.6,暂用 phpredis develop 的 8.6 兼容 commit
+    redis_commit = "a6ce1e60b3e81ce3b25174aa5aaefd5590dc64fd"
+    redis_sha256 = "79288312706263ad0744391752fd9a62273d5a73c4e6e6a42ff2819e76363533"
+    yaf_version = "3.3.8"
+    mcrypt_version = "1.0.9"
+    libssh2_version = "1.11.1"
+    ssh2_version = "1.6.1"
+  }
+  tags = concat(
+    ["registry.verystar.net/library/php:8.6-fpm"],
+    tag("${target.php8-6.args.php_version}"),
+  )
+}

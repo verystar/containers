@@ -120,3 +120,14 @@ target "php85-composer2" {
   }
   tags = tag("${target.php85-composer2.args.php_version}", "${target.php85-composer2.args.composer_version}")
 }
+
+target "php86-composer2" {
+  inherits = ["common"]
+  context = "php/8.6-composer"
+  args = {
+    php_version = "8.6.0-fpm"
+    # 2.8.5 在 PHP 8.6 下会刷 spl_object_hash/curl_close 弃用提示,8.6 单独升到 2.11.2
+    composer_version = "2.11.2"
+  }
+  tags = tag("${target.php86-composer2.args.php_version}", "${target.php86-composer2.args.composer_version}")
+}
